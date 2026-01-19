@@ -1,0 +1,36 @@
+2026-01-19 20:09:34,266 - INFO - Starting scrape run...
+2026-01-19 20:09:34,810 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote
+2026-01-19 20:09:34,900 - INFO - Open listings before scrape: 0
+2026-01-19 20:50:42,262 - ERROR - Scrape failed
+Traceback (most recent call last):
+  File "D:\03 Python\24 Web Crawler\scripts\scrape.py", line 71, in run_scrape
+    listings = scrape_listings(scrape_url, headless=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\03 Python\24 Web Crawler\src\scraper.py", line 142, in scrape_listings
+    page.wait_for_function(
+  File "D:\03 Python\24 Web Crawler\myenv\Lib\site-packages\playwright\sync_api\_generated.py", line 11595, in wait_for_function
+    self._sync(
+  File "D:\03 Python\24 Web Crawler\myenv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "D:\03 Python\24 Web Crawler\myenv\Lib\site-packages\playwright\_impl\_page.py", line 1110, in wait_for_function
+    return await self._main_frame.wait_for_function(**locals_to_params(locals()))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\03 Python\24 Web Crawler\myenv\Lib\site-packages\playwright\_impl\_frame.py", line 878, in wait_for_function
+    await self._channel.send("waitForFunction", self._timeout, params)
+  File "D:\03 Python\24 Web Crawler\myenv\Lib\site-packages\playwright\_impl\_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\03 Python\24 Web Crawler\myenv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.wait_for_function: Timeout 120000ms exceeded.
+2026-01-19 21:30:46,523 - INFO - Starting scrape run...
+2026-01-19 21:30:47,344 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-01-19 21:30:47,459 - INFO - Open listings before scrape: 0
+2026-01-19 21:31:47,603 - INFO - Scraped 662 listings
+2026-01-19 21:31:47,723 - INFO - Scrape completed: 662 found, 662 new, 0 closed
+2026-01-19 21:51:17,146 - INFO - Starting scrape run...
+2026-01-19 21:51:17,884 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-01-19 21:51:18,005 - INFO - Open listings before scrape: 0
+2026-01-19 21:52:14,729 - INFO - Scraped 660 listings
+2026-01-19 21:52:14,906 - INFO - Scrape completed: 660 found, 660 new, 0 closed

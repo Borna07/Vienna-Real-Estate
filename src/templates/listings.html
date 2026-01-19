@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Listings - Vienna Apartment Tracker{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold mb-2">All Listings</h1>
+            <p class="text-zinc-400">{{ listings|length }} apartments tracked</p>
+        </div>
+        <div class="flex gap-3">
+            <input type="text" id="search" placeholder="Search listings..." 
+                   class="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm focus:outline-none focus:border-teal-400">
+            <select id="status-filter" class="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm focus:outline-none focus:border-teal-400">
+                <option value="">All Status</option>
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Listings Table -->
+    <div class="card overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left" id="listings-table">
+                <thead class="text-zinc-400 text-sm border-b border-zinc-700 bg-zinc-900/50">
+                    <tr>
+                        <th class="p-4">Status</th>
+                        <th class="p-4">Title</th>
+                        <th class="p-4">Location</th>
+                        <th class="p-4">Price</th>
+                        <th class="p-4">€/m²</th>
+                        <th class="p-4">Rooms</th>
+                        <th class="p-4">Size</th>
+                        <th class="p-4">First Seen</th>
+                        <th class="p-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm">
+                    {% for listing in listings %}
+                    <tr class="table-row border-b border-zinc-800" data-status="{{ listing.status }}" data-search="{{ listing.title|lower }} {{ listing.location|lower }}">
+                        <td class="p-4">
+                            {% if listing.status == 'open' %}
+                            <span class="px-2 py-1 rounded-full text-xs badge-open">Open</span>
+                            {% else %}
+                            <span class="px-2 py-1 rounded-full text-xs badge-closed">Closed</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 max-w-xs truncate" title="{{ listing.title }}">{{ listing.title }}</td>
+                        <td class="p-4 text-zinc-400">{{ listing.location }}</td>
+                        <td class="p-4 font-semibold text-teal-400">{{ listing.price }}</td>
+                        <td class="p-4 text-amber-400">{% if listing.price_per_sqm %}€{{ "%.0f"|format(listing.price_per_sqm) }}{% else %}-{% endif %}</td>
+                        <td class="p-4">{{ listing.rooms }}</td>
+                        <td class="p-4">{{ listing.size_sqm }} m²</td>
+                        <td class="p-4 text-zinc-500">{{ listing.first_seen_at[:10] if listing.first_seen_at else '-' }}</td>
+                        <td class="p-4">
+                            {% if listing.url %}
+                            <a href="{{ listing.url }}" target="_blank" class="text-teal-400 hover:text-teal-300">View</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const searchInput = document.getElementById('search');
+    const statusFilter = document.getElementById('status-filter');
+    const rows = document.querySelectorAll('#listings-table tbody tr');
+
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const statusValue = statusFilter.value;
+
+        rows.forEach(row => {
+            const matchesSearch = row.dataset.search.includes(searchTerm);
+            const matchesStatus = !statusValue || row.dataset.status === statusValue;
+            row.style.display = matchesSearch && matchesStatus ? '' : 'none';
+        });
+    }
+
+    searchInput.addEventListener('input', filterTable);
+    statusFilter.addEventListener('change', filterTable);
+</script>
+{% endblock %}

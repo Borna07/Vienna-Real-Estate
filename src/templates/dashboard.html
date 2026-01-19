@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Vienna Apartment Tracker{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div>
+        <h1 class="text-3xl font-bold mb-2">Apartment Price Dashboard</h1>
+        <p class="text-zinc-400">Track Vienna apartment listings and price trends</p>
+    </div>
+
+    <!-- Price Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card p-6 gradient-border">
+            <div class="text-zinc-400 text-sm font-medium mb-2">Median Price</div>
+            <div class="stat-value">€{{ "{:,.0f}".format(median_price) }}</div>
+            <div class="text-zinc-500 text-sm mt-2">Middle value of all listings</div>
+        </div>
+        <div class="card p-6 gradient-border">
+            <div class="text-zinc-400 text-sm font-medium mb-2">Average Price</div>
+            <div class="text-3xl font-bold text-amber-400">€{{ "{:,.0f}".format(avg_price) }}</div>
+            <div class="text-zinc-500 text-sm mt-2">Mean of all listings</div>
+        </div>
+        <div class="card p-6 gradient-border">
+            <div class="text-zinc-400 text-sm font-medium mb-2">Average €/m²</div>
+            <div class="text-3xl font-bold text-rose-400">€{{ "{:,.0f}".format(avg_price_per_sqm) }}</div>
+            <div class="text-zinc-500 text-sm mt-2">Price per square meter</div>
+        </div>
+    </div>
+
+    <!-- Listing Count Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card p-6">
+            <div class="text-zinc-400 text-sm font-medium mb-2">Open Listings</div>
+            <div class="text-2xl font-bold text-teal-400">{{ total_open }}</div>
+            <div class="text-zinc-500 text-sm mt-2">Currently active</div>
+        </div>
+        <div class="card p-6">
+            <div class="text-zinc-400 text-sm font-medium mb-2">Closed Listings</div>
+            <div class="text-2xl font-bold text-zinc-500">{{ total_closed }}</div>
+            <div class="text-zinc-500 text-sm mt-2">No longer available</div>
+        </div>
+        <div class="card p-6">
+            <div class="text-zinc-400 text-sm font-medium mb-2">Total Tracked</div>
+            <div class="text-2xl font-bold text-zinc-300">{{ total_open + total_closed }}</div>
+            <div class="text-zinc-500 text-sm mt-2">All time</div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Price Over Time -->
+        <div class="card p-6">
+            <h2 class="text-lg font-semibold mb-4">Average Price Over Time</h2>
+            <div id="price-chart" style="height: 300px;"></div>
+        </div>
+        
+        <!-- Price per sqm by District -->
+        <div class="card p-6">
+            <h2 class="text-lg font-semibold mb-4">Average €/m² by District</h2>
+            <div id="price-sqm-district-chart" style="height: 300px;"></div>
+        </div>
+    </div>
+
+    <!-- Recent Scrape Runs -->
+    <div class="card p-6">
+        <h2 class="text-lg font-semibold mb-4">Recent Scrape Runs</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="text-zinc-400 text-sm border-b border-zinc-700">
+                    <tr>
+                        <th class="pb-3 pr-4">Started</th>
+                        <th class="pb-3 pr-4">Status</th>
+                        <th class="pb-3 pr-4">Found</th>
+                        <th class="pb-3 pr-4">New</th>
+                        <th class="pb-3">Closed</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm">
+                    {% for run in recent_runs %}
+                    <tr class="table-row border-b border-zinc-800">
+                        <td class="py-3 pr-4">{{ run.started_at }}</td>
+                        <td class="py-3 pr-4">
+                            {% if run.status == 'completed' %}
+                            <span class="px-2 py-1 rounded-full text-xs badge-open">Completed</span>
+                            {% elif 'failed' in run.status %}
+                            <span class="px-2 py-1 rounded-full text-xs badge-closed">Failed</span>
+                            {% else %}
+                            <span class="px-2 py-1 rounded-full text-xs bg-zinc-700 text-zinc-300">{{ run.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 pr-4">{{ run.listings_found or '-' }}</td>
+                        <td class="py-3 pr-4">{{ run.new_listings or '-' }}</td>
+                        <td class="py-3">{{ run.closed_listings or '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const priceOverTime = {{ price_over_time_json | safe }};
+    const pricePerSqmByDistrict = {{ price_per_sqm_by_district_json | safe }};
+
+    // Price over time chart
+    if (priceOverTime.length > 0) {
+        const priceTrace = {
+            x: priceOverTime.map(d => d.date),
+            y: priceOverTime.map(d => d.avg_price),
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'Avg Price',
+            line: { color: '#2dd4bf', width: 2 },
+            marker: { size: 6 },
+            fill: 'tozeroy',
+            fillcolor: 'rgba(45, 212, 191, 0.1)'
+        };
+
+        Plotly.newPlot('price-chart', [priceTrace], {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#a1a1aa' },
+            margin: { t: 20, r: 20, b: 40, l: 70 },
+            xaxis: { 
+                gridcolor: '#27272a',
+                linecolor: '#27272a'
+            },
+            yaxis: { 
+                gridcolor: '#27272a',
+                linecolor: '#27272a',
+                tickformat: '€,.0f'
+            }
+        }, { responsive: true });
+    } else {
+        document.getElementById('price-chart').innerHTML = '<div class="text-zinc-500 text-center py-12">No data yet. Run the scraper to collect data.</div>';
+    }
+
+    // Price per sqm by district chart
+    if (pricePerSqmByDistrict.length > 0) {
+        const districtTrace = {
+            x: pricePerSqmByDistrict.slice(0, 10).map(d => d.location),
+            y: pricePerSqmByDistrict.slice(0, 10).map(d => d.avg_price_per_sqm),
+            type: 'bar',
+            marker: {
+                color: pricePerSqmByDistrict.slice(0, 10).map((_, i) => {
+                    const colors = ['#f43f5e', '#fbbf24', '#2dd4bf', '#a78bfa', '#60a5fa', '#ec4899', '#84cc16', '#06b6d4', '#f97316', '#8b5cf6'];
+                    return colors[i % colors.length];
+                })
+            }
+        };
+
+        Plotly.newPlot('price-sqm-district-chart', [districtTrace], {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#a1a1aa', size: 10 },
+            margin: { t: 20, r: 20, b: 120, l: 60 },
+            xaxis: { 
+                gridcolor: '#27272a',
+                linecolor: '#27272a',
+                tickangle: -45
+            },
+            yaxis: { 
+                gridcolor: '#27272a',
+                linecolor: '#27272a',
+                tickformat: '€,.0f',
+                title: { text: '€/m²', standoff: 10 }
+            }
+        }, { responsive: true });
+    } else {
+        document.getElementById('price-sqm-district-chart').innerHTML = '<div class="text-zinc-500 text-center py-12">No data yet.</div>';
+    }
+</script>
+{% endblock %}

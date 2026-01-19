@@ -1,0 +1,1178 @@
+{
+  "advertSummary": [
+    {
+      "id": "1278223113",
+      "verticalId": 2,
+      "adTypeId": 1,
+      "productId": 223,
+      "advertStatus": {
+        "id": "active",
+        "description": "aktiv",
+        "statusId": 50
+      },
+      "description": "\"Leopold Quartier\" Die letzte verfügbare 3 Zimmer Wohnung in diesem HAUS! Sichern Sie sich jetzt die letzte Möglichkeit in ODS 27 eine 3 Zimmer Wohnung zu erwerben",
+      "attributes": {
+        "attribute": [
+          {
+            "name": "BODY_DYN",
+            "values": [
+              "Wir sind stolz darauf Ihnen mitteilen zu dürfen, dass unser neues Projekt \"LeopoldQuartier Living\" mit 75 Eigentumswohnungen und 33 KFZ-Tiefgaragenstellplätzen startet. Das LeopoldQuartier ist rundum nachhaltig geplant. Holzbau, Geothermie und..."
+            ]
+          },
+          {
+            "name": "imagedescription",
+            "values": [
+              "Bild"
+            ]
+          },
+          {
+            "name": "ORG_UUID",
+            "values": [
+              "45433a65-dc89-4bbb-92e6-c82a3667e9e5"
+            ]
+          },
+          {
+            "name": "FLOOR",
+            "values": [
+              "5"
+            ]
+          },
+          {
+            "name": "PUBLISHED",
+            "values": [
+              "1768559280000"
+            ]
+          },
+          {
+            "name": "COUNTRY",
+            "values": [
+              "Österreich"
+            ]
+          },
+          {
+            "name": "ADTYPE_ID",
+            "values": [
+              "1"
+            ]
+          },
+          {
+            "name": "PROPERTY_TYPE_ID",
+            "values": [
+              "3"
+            ]
+          },
+          {
+            "name": "ORGID",
+            "values": [
+              "23301782"
+            ]
+          },
+          {
+            "name": "SEO_URL",
+            "values": [
+              "immobilien/d/eigentumswohnung/wien/wien-1020-leopoldstadt/-leopold-quartier-die-letzte-verfuegbare-3-zimmer-wohnung-in-diesem-haus-sichern-sie-sich-jetzt-die-letzte-moeglichkeit-in-ods-27-eine-3-zimmer-wohnung-zu-erwerben-1278223113/"
+            ]
+          },
+          {
+            "name": "FREE_AREA_TYPE",
+            "values": [
+              "20"
+            ]
+          },
+          {
+            "name": "PUBLISHED_String",
+            "values": [
+              "2026-01-16T11:28:00Z"
+            ]
+          },
+          {
+            "name": "ESTATE_PREFERENCE",
+            "values": [
+              "15, 23, 250, 4"
+            ]
+          },
+          {
+            "name": "UPSELLING_AD_SEARCHRESULT",
+            "values": [
+              "true"
+            ]
+          },
+          {
+            "name": "categorytreeids",
+            "values": [
+              "7276"
+            ]
+          },
+          {
+            "name": "MMO",
+            "values": [
+              "3/127/822/3113_1635445067.jpg"
+            ]
+          },
+          {
+            "name": "AD_UUID",
+            "values": [
+              "d9c34ad4-8502-4472-8691-b34e9d305250"
+            ]
+          },
+          {
+            "name": "AD_SEARCHRESULT_LOGO",
+            "values": [
+              "adSearchResult/23301782/ubm_logo_180412_5411532009485680348.png"
+            ]
+          },
+          {
+            "name": "COORDINATES",
+            "values": [
+              "48.22088749,16.36952499"
+            ]
+          },
+          {
+            "name": "LOCATION",
+            "values": [
+              "Wien, 02. Bezirk, Leopoldstadt"
+            ]
+          },
+          {
+            "name": "FREE_AREA/FREE_AREA_AREA_TOTAL",
+            "values": [
+              "9"
+            ]
+          },
+          {
+            "name": "POSTCODE",
+            "values": [
+              "1020"
+            ]
+          },
+          {
+            "name": "STATE",
+            "values": [
+              "Wien"
+            ]
+          },
+          {
+            "name": "ORGNAME",
+            "values": [
+              "UBM Development Österreich GmbH"
+            ]
+          },
+          {
+            "name": "ESTATE_SIZE/LIVING_AREA",
+            "values": [
+              "80"
+            ]
+          },
+          {
+            "name": "DISTRICT",
+            "values": [
+              "Wien"
+            ]
+          },
+          {
+            "name": "HEADING",
+            "values": [
+              "\"Leopold Quartier\" Die letzte verfügbare 3 Zimmer Wohnung in diesem HAUS! Sichern Sie sich jetzt die letzte Möglichkeit in ODS 27 eine 3 Zimmer Wohnung zu erwerben"
+            ]
+          },
+          {
+            "name": "LOCATION_QUALITY",
+            "values": [
+              "1.0"
+            ]
+          },
+          {
+            "name": "RESULT_LIST_TOPAD",
+            "values": [
+              "topad_result",
+              "topad_start"
+            ]
+          },
+          {
+            "name": "LOCATION_ID",
+            "values": [
+              "117224"
+            ]
+          },
+          {
+            "name": "PROPERTY_TYPE",
+            "values": [
+              "Wohnung"
+            ]
+          },
+          {
+            "name": "PROJECT_ID",
+            "values": [
+              "1901269473"
+            ]
+          },
+          {
+            "name": "NUMBER_OF_ROOMS",
+            "values": [
+              "3"
+            ]
+          },
+          {
+            "name": "ADID",
+            "values": [
+              "1278223113"
+            ]
+          },
+          {
+            "name": "ALL_IMAGE_URLS",
+            "values": [
+              "3/127/822/3113_1635445067.jpg;3/127/822/3113_-144644294.jpg;3/127/822/3113_1443617478.jpg;3/127/822/3113_-1340416298.jpg;3/127/822/3113_-1882857257.jpg;3/127/822/3113_121103701.jpg;3/127/822/3113_555081875.jpg;3/127/822/3113_-1162029564.jpg;3/127/822/3113_-357112070.jpg;3/127/822/3113_289337050.jpg;3/127/822/3113_-1851531558.jpg;3/127/822/3113_1567277956.jpg"
+            ]
+          },
+          {
+            "name": "ADVERTISER_REF",
+            "values": [
+              "3831"
+            ]
+          },
+          {
+            "name": "PRODUCT_ID",
+            "values": [
+              "223"
+            ]
+          },
+          {
+            "name": "ESTATE_PRICE/PRICE_SUGGESTION",
+            "values": [
+              "865000.0"
+            ]
+          },
+          {
+            "name": "IS_BUMPED",
+            "values": [
+              "1"
+            ]
+          },
+          {
+            "name": "ROOMS",
+            "values": [
+              "3X3"
+            ]
+          },
+          {
+            "name": "PRICE",
+            "values": [
+              "865000"
+            ]
+          },
+          {
+            "name": "PRICE_FOR_DISPLAY",
+            "values": [
+              "€ 865.000"
+            ]
+          },
+          {
+            "name": "ESTATE_SIZE",
+            "values": [
+              "80"
+            ]
+          },
+          {
+            "name": "ISPRIVATE",
+            "values": [
+              "0"
+            ]
+          },
+          {
+            "name": "PROPERTY_TYPE_FLAT",
+            "values": [
+              "true"
+            ]
+          },
+          {
+            "name": "UNIT_TITLE",
+            "values": [
+              "3831"
+            ]
+          },
+          {
+            "name": "FREE_AREA_TYPE_NAME",
+            "values": [
+              "Balkon"
+            ]
+          }
+        ]
+      },
+      "advertImageList": {
+        "advertImage": [
+          {
+            "id": 1,
+            "name": "3/127/822/3113_1635445067.jpg",
+            "selfLink": "https://api.willhaben.at/restapi/v2/atimage/1278223113/1",
+            "description": "Cover Image",
+            "mainImageUrl": "https://cache.willhaben.at/mmo/3/127/822/3113_1635445067_hoved.jpg",
+            "thumbnailImageUrl": "https://cache.willhaben.at/mmo/3/127/822/3113_1635445067_thumb.jpg",
+            "referenceImageUrl": "https://cache.willhaben.at/mmo/3/127/822/3113_1635445067.jpg",
+            "similarImageSearchUrl": null,
+            "reference": "3/127/822/3113_1635445067.jpg"
+          },
+          {
+            "id": 1,
+            "name": "3/127/822/3113_-144644294.jpg",
+            "selfLink": "https://api.willhaben.at/restapi/v2/atimage/1278223113/1",
+            "description": "Cover Image",
+            "mainImageUrl": "https://cache.willhaben.at/mmo/3/127/822/3113_-144644294_hoved.jpg",
+            "thumbnailImageUrl": "https://cache.willhaben.at/mmo/3/127/822/3113_-144644294_thumb.jpg",
+            "referenceImageUrl": "https://cache.willhaben.at/mmo/3/127/822/3113_-144644294.jpg",
+            "similarImageSearchUrl": null,
+            "reference": "3/127/822/3113_-144644294.jpg"
+          },
+          {
+            "id": 1,
+            "name": "3/127/822/3113_1443617478.jpg",
+            "selfLink": "https://api.willhaben.at/restapi/v2/atimage/1278223113/1",
+            "description": "Cover Image",
+            "mainImageUrl": "https://cache.willhaben.at/mmo/3/127/822/3113_1443617478_hoved.jpg",
+            "thumbnailImageUrl": "https://cache.willhaben.at/mmo/3/127/822/3113_1443617478_thumb.jpg",
+            "referenceImageUrl": "https://cache.willhaben.at/mmo/3/127/822/3113_1443617478.jpg",
+            "similarImageSearchUrl": null,
+            "reference": "3/127/822/3113_1443617478.jpg"
+          }
+        ],
+        "floorPlans": []
+      },
+      "selfLink": "https://api.willhaben.at/restapi/v2/atverz/1278223113",
+      "contextLinkList": {
+        "contextLink": [
+          {
+            "id": "selfLink",
+            "description": "Identifies this entity",
+            "uri": "https://api.willhaben.at/restapi/v2/atverz/1278223113",
+            "selected": false,
+            "relativePath": "/atverz/1278223113",
+            "serviceName": "iad"
+          },
+          {
+            "id": "seoSelfLink",
+            "description": "Self reference",
+            "uri": "https://api.willhaben.at/restapi/v2/atverz/immobilien/d/eigentumswohnung/wien/wien-1020-leopoldstadt/-leopold-quartier-die-letzte-verfuegbare-3-zimmer-wohnung-in-diesem-haus-sichern-sie-sich-jetzt-die-letzte-moeglichkeit-in-ods-27-eine-3-zimmer-wohnung-zu-erwerben-1278223113/",
+            "selected": false,
+            "relativePath": "/atverz/immobilien/d/eigentumswohnung/wien/wien-1020-leopoldstadt/-leopold-quartier-die-letzte-verfuegbare-3-zimmer-wohnung-in-diesem-haus-sichern-sie-sich-jetzt-die-letzte-moeglichkeit-in-ods-27-eine-3-zimmer-wohnung-zu-erwerben-1278223113/",
+            "serviceName": "iad"
+          },
+          {
+            "id": "adDetailLink",
+            "description": "Self reference to advert via ad detail component",
+            "uri": "https://publicapi.willhaben.at/atdetail/v1/1278223113",
+            "selected": false,
+            "relativePath": "/1278223113",
+            "serviceName": "addetail"
+          },
+          {
+            "id": "removeAdFromFolder",
+            "description": "Remove ad from any folder",
+            "uri": "https://api.willhaben.at/restapi/v2/userfolders/remove/1278223113",
+            "selected": false,
+            "relativePath": "/userfolders/remove/1278223113",
+            "serviceName": "iad"
+          },
+          {
+            "id": "getFolderSaveLinks",
+            "description": "Get contextlinks to save the ad in the users folders",
+            "uri": "https://api.willhaben.at/restapi/v2/userfolders/links/1278223113",
+            "selected": false,
+            "relativePath": "/userfolders/links/1278223113",
+            "serviceName": "iad"
+          },
+          {
+            "id": "iadShareLink",
+            "description": "Share link in iAd",
+            "uri": "https://www.willhaben.at/iad/object?adId=1278223113",
+            "selected": false,
+            "relativePath": "/iad/object?adId=1278223113",
+            "serviceName": "web_url"
+          }
+        ]
+      },
+      "advertiserInfo": {
+        "label": "UBM Development Österreich GmbH",
+        "iconSVG": null,
+        "iconPNG": null,
+        "iconType": "NONE"
+      },
+      "upsellingOrganisationLogo": "https://cache.willhaben.at/mmo/logo/adSearchResult/23301782/ubm_logo_180412_5411532009485680348_medium.png",
+      "teaserAttributes": [
+        {
+          "prefix": null,
+          "value": "80",
+          "postfix": "m²"
+        },
+        {
+          "prefix": null,
+          "value": "3",
+          "postfix": "Zimmer"
+        },
+        {
+          "prefix": null,
+          "value": "",
+          "postfix": "Balkon"
+        }
+      ],
+      "children": null
+    },
+    {
+      "id": "1160004275",
+      "verticalId": 2,
+      "adTypeId": 1,
+      "productId": 100,
+      "advertStatus": {
+        "id": "active",
+        "description": "aktiv",
+        "statusId": 50
+      },
+      "description": "PROVISIONSFREI in 1070: Helle und ruhige 3-Zimmer-Wohnung mit südseitiger Innenhof-Loggia",
+      "attributes": {
+        "attribute": [
+          {
+            "name": "LOCATION",
+            "values": [
+              "Wien, 07. Bezirk, Neubau"
+            ]
+          },
+          {
+            "name": "FREE_AREA/FREE_AREA_AREA_TOTAL",
+            "values": [
+              "17"
+            ]
+          },
+          {
+            "name": "POSTCODE",
+            "values": [
+              "1070"
+            ]
+          },
+          {
+            "name": "STATE",
+            "values": [
+              "Wien"
+            ]
+          },
+          {
+            "name": "BODY_DYN",
+            "values": [
+              "Diese lichtdurchflutete 3-Zimmer-Wohnung befindet sich in absoluter Bestlage des 7. Bezirks, der Neustiftgasse. Sie bietet eine effiziente Raumaufteilung, eine große südseitige Innenhof-Loggia über die gesamte Wohnungslänge, einen Lift im Haus, sowie ein..."
+            ]
+          },
+          {
+            "name": "ORG_UUID",
+            "values": [
+              "2a41515f-1fdc-4194-bad3-c82a3667e9e5"
+            ]
+          },
+          {
+            "name": "ESTATE_SIZE/LIVING_AREA",
+            "values": [
+              "62"
+            ]
+          },
+          {
+            "name": "DISTRICT",
+            "values": [
+              "Wien"
+            ]
+          },
+          {
+            "name": "HEADING",
+            "values": [
+              "PROVISIONSFREI in 1070: Helle und ruhige 3-Zimmer-Wohnung mit südseitiger Innenhof-Loggia"
+            ]
+          },
+          {
+            "name": "LOCATION_QUALITY",
+            "values": [
+              "0.79"
+            ]
+          },
+          {
+            "name": "FLOOR",
+            "values": [
+              "5"
+            ]
+          },
+          {
+            "name": "PUBLISHED",
+            "values": [
+              "1767741180000"
+            ]
+          },
+          {
+            "name": "COUNTRY",
+            "values": [
+              "Österreich"
+            ]
+          },
+          {
+            "name": "RESULT_LIST_TOPAD",
+            "values": [
+              "topad_result",
+              "topad_start"
+            ]
+          },
+          {
+            "name": "LOCATION_ID",
+            "values": [
+              "117229"
+            ]
+          },
+          {
+            "name": "PROPERTY_TYPE",
+            "values": [
+              "Wohnung"
+            ]
+          },
+          {
+            "name": "NUMBER_OF_ROOMS",
+            "values": [
+              "3"
+            ]
+          },
+          {
+            "name": "ADTYPE_ID",
+            "values": [
+              "1"
+            ]
+          },
+          {
+            "name": "PROPERTY_TYPE_ID",
+            "values": [
+              "3"
+            ]
+          },
+          {
+            "name": "ADID",
+            "values": [
+              "1160004275"
+            ]
+          },
+          {
+            "name": "ORGID",
+            "values": [
+              "20516161"
+            ]
+          },
+          {
+            "name": "SEO_URL",
+            "values": [
+              "immobilien/d/eigentumswohnung/wien/wien-1070-neubau/provisionsfrei-in-1070-helle-und-ruhige-3-zimmer-wohnung-mit-suedseitiger-innenhof-loggia-1160004275/"
+            ]
+          },
+          {
+            "name": "FREE_AREA_TYPE",
+            "values": [
+              "30"
+            ]
+          },
+          {
+            "name": "ALL_IMAGE_URLS",
+            "values": [
+              "5/116/000/4275_-869819537.jpg;5/116/000/4275_845324859.jpg;5/116/000/4275_1342088689.jpg;5/116/000/4275_-643129474.jpg;5/116/000/4275_-881871941.jpg;5/116/000/4275_1372975120.jpg;5/116/000/4275_-1832930124.jpg;5/116/000/4275_255045596.jpg;5/116/000/4275_-436880278.jpg"
+            ]
+          },
+          {
+            "name": "PUBLISHED_String",
+            "values": [
+              "2026-01-07T00:13:00Z"
+            ]
+          },
+          {
+            "name": "ESTATE_PREFERENCE",
+            "values": [
+              "250, 27, 4"
+            ]
+          },
+          {
+            "name": "categorytreeids",
+            "values": [
+              "7276"
+            ]
+          },
+          {
+            "name": "PRODUCT_ID",
+            "values": [
+              "100"
+            ]
+          },
+          {
+            "name": "ESTATE_PRICE/PRICE_SUGGESTION",
+            "values": [
+              "499000.0"
+            ]
+          },
+          {
+            "name": "MMO",
+            "values": [
+              "5/116/000/4275_-869819537.jpg"
+            ]
+          },
+          {
+            "name": "ROOMS",
+            "values": [
+              "3X3"
+            ]
+          },
+          {
+            "name": "AD_UUID",
+            "values": [
+              "75b23b4c-6939-466a-ae1e-b34e9d305250"
+            ]
+          },
+          {
+            "name": "ADDRESS",
+            "values": [
+              "Neustiftgasse"
+            ]
+          },
+          {
+            "name": "COORDINATES",
+            "values": [
+              "48.20573,16.3445"
+            ]
+          },
+          {
+            "name": "PRICE",
+            "values": [
+              "499000"
+            ]
+          },
+          {
+            "name": "PRICE_FOR_DISPLAY",
+            "values": [
+              "€ 499.000"
+            ]
+          },
+          {
+            "name": "ESTATE_SIZE",
+            "values": [
+              "62"
+            ]
+          },
+          {
+            "name": "ISPRIVATE",
+            "values": [
+              "1"
+            ]
+          },
+          {
+            "name": "PROPERTY_TYPE_FLAT",
+            "values": [
+              "true"
+            ]
+          },
+          {
+            "name": "FREE_AREA_TYPE_NAME",
+            "values": [
+              "Loggia"
+            ]
+          }
+        ]
+      },
+      "advertImageList": {
+        "advertImage": [
+          {
+            "id": 1,
+            "name": "5/116/000/4275_-869819537.jpg",
+            "selfLink": "https://api.willhaben.at/restapi/v2/atimage/1160004275/1",
+            "description": "Cover Image",
+            "mainImageUrl": "https://cache.willhaben.at/mmo/5/116/000/4275_-869819537_hoved.jpg",
+            "thumbnailImageUrl": "https://cache.willhaben.at/mmo/5/116/000/4275_-869819537_thumb.jpg",
+            "referenceImageUrl": "https://cache.willhaben.at/mmo/5/116/000/4275_-869819537.jpg",
+            "similarImageSearchUrl": null,
+            "reference": "5/116/000/4275_-869819537.jpg"
+          },
+          {
+            "id": 1,
+            "name": "5/116/000/4275_845324859.jpg",
+            "selfLink": "https://api.willhaben.at/restapi/v2/atimage/1160004275/1",
+            "description": "Cover Image",
+            "mainImageUrl": "https://cache.willhaben.at/mmo/5/116/000/4275_845324859_hoved.jpg",
+            "thumbnailImageUrl": "https://cache.willhaben.at/mmo/5/116/000/4275_845324859_thumb.jpg",
+            "referenceImageUrl": "https://cache.willhaben.at/mmo/5/116/000/4275_845324859.jpg",
+            "similarImageSearchUrl": null,
+            "reference": "5/116/000/4275_845324859.jpg"
+          },
+          {
+            "id": 1,
+            "name": "5/116/000/4275_1342088689.jpg",
+            "selfLink": "https://api.willhaben.at/restapi/v2/atimage/1160004275/1",
+            "description": "Cover Image",
+            "mainImageUrl": "https://cache.willhaben.at/mmo/5/116/000/4275_1342088689_hoved.jpg",
+            "thumbnailImageUrl": "https://cache.willhaben.at/mmo/5/116/000/4275_1342088689_thumb.jpg",
+            "referenceImageUrl": "https://cache.willhaben.at/mmo/5/116/000/4275_1342088689.jpg",
+            "similarImageSearchUrl": null,
+            "reference": "5/116/000/4275_1342088689.jpg"
+          }
+        ],
+        "floorPlans": []
+      },
+      "selfLink": "https://api.willhaben.at/restapi/v2/atverz/1160004275",
+      "contextLinkList": {
+        "contextLink": [
+          {
+            "id": "selfLink",
+            "description": "Identifies this entity",
+            "uri": "https://api.willhaben.at/restapi/v2/atverz/1160004275",
+            "selected": false,
+            "relativePath": "/atverz/1160004275",
+            "serviceName": "iad"
+          },
+          {
+            "id": "seoSelfLink",
+            "description": "Self reference",
+            "uri": "https://api.willhaben.at/restapi/v2/atverz/immobilien/d/eigentumswohnung/wien/wien-1070-neubau/provisionsfrei-in-1070-helle-und-ruhige-3-zimmer-wohnung-mit-suedseitiger-innenhof-loggia-1160004275/",
+            "selected": false,
+            "relativePath": "/atverz/immobilien/d/eigentumswohnung/wien/wien-1070-neubau/provisionsfrei-in-1070-helle-und-ruhige-3-zimmer-wohnung-mit-suedseitiger-innenhof-loggia-1160004275/",
+            "serviceName": "iad"
+          },
+          {
+            "id": "adDetailLink",
+            "description": "Self reference to advert via ad detail component",
+            "uri": "https://publicapi.willhaben.at/atdetail/v1/1160004275",
+            "selected": false,
+            "relativePath": "/1160004275",
+            "serviceName": "addetail"
+          },
+          {
+            "id": "removeAdFromFolder",
+            "description": "Remove ad from any folder",
+            "uri": "https://api.willhaben.at/restapi/v2/userfolders/remove/1160004275",
+            "selected": false,
+            "relativePath": "/userfolders/remove/1160004275",
+            "serviceName": "iad"
+          },
+          {
+            "id": "getFolderSaveLinks",
+            "description": "Get contextlinks to save the ad in the users folders",
+            "uri": "https://api.willhaben.at/restapi/v2/userfolders/links/1160004275",
+            "selected": false,
+            "relativePath": "/userfolders/links/1160004275",
+            "serviceName": "iad"
+          },
+          {
+            "id": "iadShareLink",
+            "description": "Share link in iAd",
+            "uri": "https://www.willhaben.at/iad/object?adId=1160004275",
+            "selected": false,
+            "relativePath": "/iad/object?adId=1160004275",
+            "serviceName": "web_url"
+          }
+        ]
+      },
+      "advertiserInfo": {
+        "label": "Privat",
+        "iconSVG": null,
+        "iconPNG": null,
+        "iconType": "NONE"
+      },
+      "upsellingOrganisationLogo": null,
+      "teaserAttributes": [
+        {
+          "prefix": null,
+          "value": "62",
+          "postfix": "m²"
+        },
+        {
+          "prefix": null,
+          "value": "3",
+          "postfix": "Zimmer"
+        },
+        {
+          "prefix": null,
+          "value": "",
+          "postfix": "Loggia"
+        }
+      ],
+      "children": null
+    },
+    {
+      "id": "1557162362",
+      "verticalId": 2,
+      "adTypeId": 1,
+      "productId": 223,
+      "advertStatus": {
+        "id": "active",
+        "description": "aktiv",
+        "statusId": 50
+      },
+      "description": "Perfekt geschnittene 3 Zimmer Altbauwohnung, direkt am Wallensteinplatz",
+      "attributes": {
+        "attribute": [
+          {
+            "name": "LOCATION",
+            "values": [
+              "Wien, 20. Bezirk, Brigittenau"
+            ]
+          },
+          {
+            "name": "POSTCODE",
+            "values": [
+              "1200"
+            ]
+          },
+          {
+            "name": "STATE",
+            "values": [
+              "Wien"
+            ]
+          },
+          {
+            "name": "BODY_DYN",
+            "values": [
+              "  Stilvoll sanierte Altbauwohnung mit laufendem Mietverhältnis - attraktive Anlage in urbaner Lage Zum Verkauf gelangt eine hochwertig sanierte Altbauwohnung in zentraler Lage, die klassischen Wiener Charme mit modernem Wohnkomfort verbindet. Die Einheit..."
+            ]
+          },
+          {
+            "name": "ORGNAME",
+            "values": [
+              "WI-RE Immobilienmakler GmbH"
+            ]
+          },
+          {
+            "name": "imagedescription",
+            "values": [
+              "Bild"
+            ]
+          },
+          {
+            "name": "ORG_UUID",
+            "values": [
+              "ca9301b5-2904-4ae3-a621-b34e9d305250"
+            ]
+          },
+          {
+            "name": "ESTATE_SIZE/LIVING_AREA",
+            "values": [
+              "61"
+            ]
+          },
+          {
+            "name": "DISTRICT",
+            "values": [
+              "Wien"
+            ]
+          },
+          {
+            "name": "HEADING",
+            "values": [
+              "Perfekt geschnittene 3 Zimmer Altbauwohnung, direkt am Wallensteinplatz"
+            ]
+          },
+          {
+            "name": "LOCATION_QUALITY",
+            "values": [
+              "1.0"
+            ]
+          },
+          {
+            "name": "FLOOR",
+            "values": [
+              "3"
+            ]
+          },
+          {
+            "name": "PUBLISHED",
+            "values": [
+              "1768131360000"
+            ]
+          },
+          {
+            "name": "COUNTRY",
+            "values": [
+              "Österreich"
+            ]
+          },
+          {
+            "name": "RESULT_LIST_TOPAD",
+            "values": [
+              "topad_result",
+              "topad_start"
+            ]
+          },
+          {
+            "name": "LOCATION_ID",
+            "values": [
+              "117242"
+            ]
+          },
+          {
+            "name": "PROPERTY_TYPE",
+            "values": [
+              "Wohnung"
+            ]
+          },
+          {
+            "name": "NUMBER_OF_ROOMS",
+            "values": [
+              "3"
+            ]
+          },
+          {
+            "name": "ADTYPE_ID",
+            "values": [
+              "1"
+            ]
+          },
+          {
+            "name": "PROPERTY_TYPE_ID",
+            "values": [
+              "3"
+            ]
+          },
+          {
+            "name": "ADID",
+            "values": [
+              "1557162362"
+            ]
+          },
+          {
+            "name": "ORGID",
+            "values": [
+              "29611018"
+            ]
+          },
+          {
+            "name": "SEO_URL",
+            "values": [
+              "immobilien/d/eigentumswohnung/wien/wien-1200-brigittenau/perfekt-geschnittene-3-zimmer-altbauwohnung-direkt-am-wallensteinplatz-1557162362/"
+            ]
+          },
+          {
+            "name": "ALL_IMAGE_URLS",
+            "values": [
+              "2/155/716/2362_129297071.jpg;2/155/716/2362_-1118773771.jpg;2/155/716/2362_1084285785.jpg;2/155/716/2362_745725499.jpg;2/155/716/2362_978702672.jpg;2/155/716/2362_116383400.jpg;2/155/716/2362_642311000.jpg;2/155/716/2362_-6950189.jpg;2/155/716/2362_1231872230.jpg;2/155/716/2362_-1111957074.jpg;2/155/716/2362_-1468343742.jpg;2/155/716/2362_-1660296437.jpg;2/155/716/2362_-973348179.jpg;2/155/716/2362_-1205872370.jpg;2/155/716/2362_-691809494.jpg;2/155/716/2362_-2046824860.jpg"
+            ]
+          },
+          {
+            "name": "PUBLISHED_String",
+            "values": [
+              "2026-01-11T12:36:00Z"
+            ]
+          },
+          {
+            "name": "ESTATE_PREFERENCE",
+            "values": [
+              "25, 27, 4"
+            ]
+          },
+          {
+            "name": "UPSELLING_AD_SEARCHRESULT",
+            "values": [
+              "true"
+            ]
+          },
+          {
+            "name": "categorytreeids",
+            "values": [
+              "7276"
+            ]
+          },
+          {
+            "name": "ADVERTISER_REF",
+            "values": [
+              "5612/328"
+            ]
+          },
+          {
+            "name": "PRODUCT_ID",
+            "values": [
+              "223"
+            ]
+          },
+          {
+            "name": "ESTATE_PRICE/PRICE_SUGGESTION",
+            "values": [
+              "335500.0"
+            ]
+          },
+          {
+            "name": "IS_BUMPED",
+            "values": [
+              "1"
+            ]
+          },
+          {
+            "name": "MMO",
+            "values": [
+              "2/155/716/2362_129297071.jpg"
+            ]
+          },
+          {
+            "name": "ROOMS",
+            "values": [
+              "3X3"
+            ]
+          },
+          {
+            "name": "AD_UUID",
+            "values": [
+              "7c86717f-87e3-4145-98f0-b34e9d305250"
+            ]
+          },
+          {
+            "name": "AD_SEARCHRESULT_LOGO",
+            "values": [
+              "adSearchResult/29611018/wire_logo_10561305276707586228_1145233954169014067.png"
+            ]
+          },
+          {
+            "name": "COORDINATES",
+            "values": [
+              "48.2283698,16.37064925"
+            ]
+          },
+          {
+            "name": "PRICE",
+            "values": [
+              "335500"
+            ]
+          },
+          {
+            "name": "PRICE_FOR_DISPLAY",
+            "values": [
+              "€ 335.500"
+            ]
+          },
+          {
+            "name": "ESTATE_SIZE",
+            "values": [
+              "61"
+            ]
+          },
+          {
+            "name": "ISPRIVATE",
+            "values": [
+              "0"
+            ]
+          },
+          {
+            "name": "PROPERTY_TYPE_FLAT",
+            "values": [
+              "true"
+            ]
+          },
+          {
+            "name": "UNIT_TITLE",
+            "values": [
+              "5612/328"
+            ]
+          }
+        ]
+      },
+      "advertImageList": {
+        "advertImage": [
+          {
+            "id": 1,
+            "name": "2/155/716/2362_129297071.jpg",
+            "selfLink": "https://api.willhaben.at/restapi/v2/atimage/1557162362/1",
+            "description": "Cover Image",
+            "mainImageUrl": "https://cache.willhaben.at/mmo/2/155/716/2362_129297071_hoved.jpg",
+            "thumbnailImageUrl": "https://cache.willhaben.at/mmo/2/155/716/2362_129297071_thumb.jpg",
+            "referenceImageUrl": "https://cache.willhaben.at/mmo/2/155/716/2362_129297071.jpg",
+            "similarImageSearchUrl": null,
+            "reference": "2/155/716/2362_129297071.jpg"
+          },
+          {
+            "id": 1,
+            "name": "2/155/716/2362_-1118773771.jpg",
+            "selfLink": "https://api.willhaben.at/restapi/v2/atimage/1557162362/1",
+            "description": "Cover Image",
+            "mainImageUrl": "https://cache.willhaben.at/mmo/2/155/716/2362_-1118773771_hoved.jpg",
+            "thumbnailImageUrl": "https://cache.willhaben.at/mmo/2/155/716/2362_-1118773771_thumb.jpg",
+            "referenceImageUrl": "https://cache.willhaben.at/mmo/2/155/716/2362_-1118773771.jpg",
+            "similarImageSearchUrl": null,
+            "reference": "2/155/716/2362_-1118773771.jpg"
+          },
+          {
+            "id": 1,
+            "name": "2/155/716/2362_1084285785.jpg",
+            "selfLink": "https://api.willhaben.at/restapi/v2/atimage/1557162362/1",
+            "description": "Cover Image",
+            "mainImageUrl": "https://cache.willhaben.at/mmo/2/155/716/2362_1084285785_hoved.jpg",
+            "thumbnailImageUrl": "https://cache.willhaben.at/mmo/2/155/716/2362_1084285785_thumb.jpg",
+            "referenceImageUrl": "https://cache.willhaben.at/mmo/2/155/716/2362_1084285785.jpg",
+            "similarImageSearchUrl": null,
+            "reference": "2/155/716/2362_1084285785.jpg"
+          }
+        ],
+        "floorPlans": []
+      },
+      "selfLink": "https://api.willhaben.at/restapi/v2/atverz/1557162362",
+      "contextLinkList": {
+        "contextLink": [
+          {
+            "id": "selfLink",
+            "description": "Identifies this entity",
+            "uri": "https://api.willhaben.at/restapi/v2/atverz/1557162362",
+            "selected": false,
+            "relativePath": "/atverz/1557162362",
+            "serviceName": "iad"
+          },
+          {
+            "id": "seoSelfLink",
+            "description": "Self reference",
+            "uri": "https://api.willhaben.at/restapi/v2/atverz/immobilien/d/eigentumswohnung/wien/wien-1200-brigittenau/perfekt-geschnittene-3-zimmer-altbauwohnung-direkt-am-wallensteinplatz-1557162362/",
+            "selected": false,
+            "relativePath": "/atverz/immobilien/d/eigentumswohnung/wien/wien-1200-brigittenau/perfekt-geschnittene-3-zimmer-altbauwohnung-direkt-am-wallensteinplatz-1557162362/",
+            "serviceName": "iad"
+          },
+          {
+            "id": "adDetailLink",
+            "description": "Self reference to advert via ad detail component",
+            "uri": "https://publicapi.willhaben.at/atdetail/v1/1557162362",
+            "selected": false,
+            "relativePath": "/1557162362",
+            "serviceName": "addetail"
+          },
+          {
+            "id": "removeAdFromFolder",
+            "description": "Remove ad from any folder",
+            "uri": "https://api.willhaben.at/restapi/v2/userfolders/remove/1557162362",
+            "selected": false,
+            "relativePath": "/userfolders/remove/1557162362",
+            "serviceName": "iad"
+          },
+          {
+            "id": "getFolderSaveLinks",
+            "description": "Get contextlinks to save the ad in the users folders",
+            "uri": "https://api.willhaben.at/restapi/v2/userfolders/links/1557162362",
+            "selected": false,
+            "relativePath": "/userfolders/links/1557162362",
+            "serviceName": "iad"
+          },
+          {
+            "id": "iadShareLink",
+            "description": "Share link in iAd",
+            "uri": "https://www.willhaben.at/iad/object?adId=1557162362",
+            "selected": false,
+            "relativePath": "/iad/object?adId=1557162362",
+            "serviceName": "web_url"
+          }
+        ]
+      },
+      "advertiserInfo": {
+        "label": "WI-RE Immobilienmakler GmbH",
+        "iconSVG": null,
+        "iconPNG": null,
+        "iconType": "NONE"
+      },
+      "upsellingOrganisationLogo": "https://cache.willhaben.at/mmo/logo/adSearchResult/29611018/wire_logo_10561305276707586228_1145233954169014067_medium.png",
+      "teaserAttributes": [
+        {
+          "prefix": null,
+          "value": "61",
+          "postfix": "m²"
+        },
+        {
+          "prefix": null,
+          "value": "3",
+          "postfix": "Zimmer"
+        }
+      ],
+      "children": null
+    }
+  ]
+}

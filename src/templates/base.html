@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vienna Apartment Tracker{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --bg-dark: #0f0f12;
+            --bg-card: #1a1a1f;
+            --bg-card-hover: #222228;
+            --accent-teal: #2dd4bf;
+            --accent-amber: #fbbf24;
+            --accent-rose: #f43f5e;
+            --text-primary: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --border-subtle: #27272a;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            transition: all 0.2s ease;
+        }
+        
+        .card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-teal);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-amber));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-link {
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-teal);
+        }
+        
+        .badge-open {
+            background: rgba(45, 212, 191, 0.15);
+            color: var(--accent-teal);
+        }
+        
+        .badge-closed {
+            background: rgba(244, 63, 94, 0.15);
+            color: var(--accent-rose);
+        }
+        
+        .table-row:hover {
+            background: var(--bg-card-hover);
+        }
+        
+        .gradient-border {
+            position: relative;
+        }
+        
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            padding: 1px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-amber));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .gradient-border:hover::before {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="border-b border-zinc-800 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-400 to-amber-400 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-zinc-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                </div>
+                <span class="text-xl font-semibold">Vienna Tracker</span>
+            </div>
+            <div class="flex gap-6">
+                <a href="/" class="nav-link {% if request.url.path == '/' %}active{% endif %}">Dashboard</a>
+                <a href="/listings" class="nav-link {% if request.url.path == '/listings' %}active{% endif %}">Listings</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
