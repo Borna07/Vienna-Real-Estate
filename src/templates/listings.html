@@ -5,19 +5,51 @@
 {% block content %}
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between flex-wrap gap-4">
         <div>
             <h1 class="text-3xl font-bold mb-2">All Listings</h1>
-            <p class="text-zinc-400">{{ listings|length }} apartments tracked</p>
+            <p class="text-zinc-400"><span id="visible-count">{{ listings|length }}</span> of {{ listings|length }} apartments</p>
         </div>
-        <div class="flex gap-3">
-            <input type="text" id="search" placeholder="Search listings..." 
-                   class="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm focus:outline-none focus:border-teal-400">
+        <div class="flex gap-3 flex-wrap">
+            <input type="text" id="search" placeholder="Search title/location..." 
+                   class="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm focus:outline-none focus:border-teal-400 w-48">
             <select id="status-filter" class="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm focus:outline-none focus:border-teal-400">
                 <option value="">All Status</option>
                 <option value="open">Open</option>
                 <option value="closed">Closed</option>
             </select>
+            <select id="location-filter" class="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm focus:outline-none focus:border-teal-400">
+                <option value="">All Districts</option>
+            </select>
+            <button id="reset-filters" class="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 border border-zinc-600 rounded-lg text-sm transition-colors">
+                Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Price/Size Filters -->
+    <div class="card p-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+                <label class="text-zinc-400 text-xs block mb-1">Min Price (€)</label>
+                <input type="number" id="min-price" placeholder="0" 
+                       class="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm focus:outline-none focus:border-teal-400">
+            </div>
+            <div>
+                <label class="text-zinc-400 text-xs block mb-1">Max Price (€)</label>
+                <input type="number" id="max-price" placeholder="∞" 
+                       class="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm focus:outline-none focus:border-teal-400">
+            </div>
+            <div>
+                <label class="text-zinc-400 text-xs block mb-1">Min Size (m²)</label>
+                <input type="number" id="min-size" placeholder="0" 
+                       class="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm focus:outline-none focus:border-teal-400">
+            </div>
+            <div>
+                <label class="text-zinc-400 text-xs block mb-1">Max Size (m²)</label>
+                <input type="number" id="max-size" placeholder="∞" 
+                       class="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm focus:outline-none focus:border-teal-400">
+            </div>
         </div>
     </div>
 
@@ -27,20 +59,44 @@
             <table class="w-full text-left" id="listings-table">
                 <thead class="text-zinc-400 text-sm border-b border-zinc-700 bg-zinc-900/50">
                     <tr>
-                        <th class="p-4">Status</th>
-                        <th class="p-4">Title</th>
-                        <th class="p-4">Location</th>
-                        <th class="p-4">Price</th>
-                        <th class="p-4">€/m²</th>
-                        <th class="p-4">Rooms</th>
-                        <th class="p-4">Size</th>
-                        <th class="p-4">First Seen</th>
+                        <th class="p-4 cursor-pointer hover:text-teal-400 select-none" data-sort="status">
+                            Status <span class="sort-icon">↕</span>
+                        </th>
+                        <th class="p-4 cursor-pointer hover:text-teal-400 select-none" data-sort="title">
+                            Title <span class="sort-icon">↕</span>
+                        </th>
+                        <th class="p-4 cursor-pointer hover:text-teal-400 select-none" data-sort="location">
+                            Location <span class="sort-icon">↕</span>
+                        </th>
+                        <th class="p-4 cursor-pointer hover:text-teal-400 select-none" data-sort="price">
+                            Price <span class="sort-icon">↕</span>
+                        </th>
+                        <th class="p-4 cursor-pointer hover:text-teal-400 select-none" data-sort="ppsqm">
+                            €/m² <span class="sort-icon">↕</span>
+                        </th>
+                        <th class="p-4 cursor-pointer hover:text-teal-400 select-none" data-sort="rooms">
+                            Rooms <span class="sort-icon">↕</span>
+                        </th>
+                        <th class="p-4 cursor-pointer hover:text-teal-400 select-none" data-sort="size">
+                            Size <span class="sort-icon">↕</span>
+                        </th>
+                        <th class="p-4 cursor-pointer hover:text-teal-400 select-none" data-sort="date">
+                            First Seen <span class="sort-icon">↕</span>
+                        </th>
                         <th class="p-4">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="text-sm">
                     {% for listing in listings %}
-                    <tr class="table-row border-b border-zinc-800" data-status="{{ listing.status }}" data-search="{{ listing.title|lower }} {{ listing.location|lower }}">
+                    <tr class="table-row border-b border-zinc-800" 
+                        data-status="{{ listing.status }}" 
+                        data-title="{{ listing.title|lower }}"
+                        data-location="{{ listing.location|lower }}"
+                        data-price="{{ listing.price_value or 0 }}"
+                        data-ppsqm="{{ listing.price_per_sqm or 0 }}"
+                        data-rooms="{{ listing.rooms or 0 }}"
+                        data-size="{{ listing.size_sqm_value or listing.size_sqm or 0 }}"
+                        data-date="{{ listing.first_seen_at or '' }}">
                         <td class="p-4">
                             {% if listing.status == 'open' %}
                             <span class="px-2 py-1 rounded-full text-xs badge-open">Open</span>
@@ -71,22 +127,133 @@
 
 {% block scripts %}
 <script>
+    // Elements
     const searchInput = document.getElementById('search');
     const statusFilter = document.getElementById('status-filter');
-    const rows = document.querySelectorAll('#listings-table tbody tr');
+    const locationFilter = document.getElementById('location-filter');
+    const minPriceInput = document.getElementById('min-price');
+    const maxPriceInput = document.getElementById('max-price');
+    const minSizeInput = document.getElementById('min-size');
+    const maxSizeInput = document.getElementById('max-size');
+    const resetBtn = document.getElementById('reset-filters');
+    const visibleCount = document.getElementById('visible-count');
+    const table = document.getElementById('listings-table');
+    const tbody = table.querySelector('tbody');
+    const headers = table.querySelectorAll('th[data-sort]');
+    let rows = Array.from(tbody.querySelectorAll('tr'));
 
+    // Populate location filter
+    const locations = [...new Set(rows.map(r => r.dataset.location))].filter(Boolean).sort();
+    locations.forEach(loc => {
+        const opt = document.createElement('option');
+        // Capitalize for display
+        opt.value = loc;
+        opt.textContent = loc.split(',')[0].replace('wien', 'Wien');
+        locationFilter.appendChild(opt);
+    });
+
+    // Sorting state
+    let sortColumn = null;
+    let sortDirection = 'asc';
+
+    // Sort function
+    function sortTable(column) {
+        if (sortColumn === column) {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortColumn = column;
+            sortDirection = 'asc';
+        }
+
+        // Update header icons
+        headers.forEach(h => {
+            const icon = h.querySelector('.sort-icon');
+            if (h.dataset.sort === column) {
+                icon.textContent = sortDirection === 'asc' ? '↑' : '↓';
+                h.classList.add('text-teal-400');
+            } else {
+                icon.textContent = '↕';
+                h.classList.remove('text-teal-400');
+            }
+        });
+
+        rows.sort((a, b) => {
+            let aVal = a.dataset[column];
+            let bVal = b.dataset[column];
+
+            // Numeric columns
+            if (['price', 'ppsqm', 'rooms', 'size'].includes(column)) {
+                aVal = parseFloat(aVal) || 0;
+                bVal = parseFloat(bVal) || 0;
+            }
+
+            if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+            if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        // Re-append sorted rows
+        rows.forEach(row => tbody.appendChild(row));
+        filterTable();
+    }
+
+    // Filter function
     function filterTable() {
         const searchTerm = searchInput.value.toLowerCase();
         const statusValue = statusFilter.value;
+        const locationValue = locationFilter.value;
+        const minPrice = parseFloat(minPriceInput.value) || 0;
+        const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
+        const minSize = parseFloat(minSizeInput.value) || 0;
+        const maxSize = parseFloat(maxSizeInput.value) || Infinity;
+
+        let visible = 0;
 
         rows.forEach(row => {
-            const matchesSearch = row.dataset.search.includes(searchTerm);
-            const matchesStatus = !statusValue || row.dataset.status === statusValue;
-            row.style.display = matchesSearch && matchesStatus ? '' : 'none';
+            const title = row.dataset.title || '';
+            const location = row.dataset.location || '';
+            const status = row.dataset.status || '';
+            const price = parseFloat(row.dataset.price) || 0;
+            const size = parseFloat(row.dataset.size) || 0;
+
+            const matchesSearch = title.includes(searchTerm) || location.includes(searchTerm);
+            const matchesStatus = !statusValue || status === statusValue;
+            const matchesLocation = !locationValue || location === locationValue;
+            const matchesPrice = price >= minPrice && price <= maxPrice;
+            const matchesSize = size >= minSize && size <= maxSize;
+
+            const show = matchesSearch && matchesStatus && matchesLocation && matchesPrice && matchesSize;
+            row.style.display = show ? '' : 'none';
+            if (show) visible++;
         });
+
+        visibleCount.textContent = visible;
     }
 
+    // Reset filters
+    function resetFilters() {
+        searchInput.value = '';
+        statusFilter.value = '';
+        locationFilter.value = '';
+        minPriceInput.value = '';
+        maxPriceInput.value = '';
+        minSizeInput.value = '';
+        maxSizeInput.value = '';
+        filterTable();
+    }
+
+    // Event listeners
     searchInput.addEventListener('input', filterTable);
     statusFilter.addEventListener('change', filterTable);
+    locationFilter.addEventListener('change', filterTable);
+    minPriceInput.addEventListener('input', filterTable);
+    maxPriceInput.addEventListener('input', filterTable);
+    minSizeInput.addEventListener('input', filterTable);
+    maxSizeInput.addEventListener('input', filterTable);
+    resetBtn.addEventListener('click', resetFilters);
+
+    headers.forEach(header => {
+        header.addEventListener('click', () => sortTable(header.dataset.sort));
+    });
 </script>
 {% endblock %}
