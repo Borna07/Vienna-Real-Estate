@@ -29,6 +29,42 @@
         </div>
     </div>
 
+    <!-- Market Trends Card -->
+    <div class="card p-6">
+        <h2 class="text-lg font-semibold mb-4">Market Trends</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-zinc-800/50 rounded-lg p-4">
+                <div class="text-zinc-400 text-sm mb-1">Avg Price Change</div>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold {% if market_trends.price_change_pct > 0 %}text-rose-400{% elif market_trends.price_change_pct < 0 %}text-teal-400{% else %}text-zinc-400{% endif %}">
+                        {% if market_trends.price_change_pct > 0 %}↑{% elif market_trends.price_change_pct < 0 %}↓{% else %}→{% endif %}
+                        {{ "{:.1f}".format(market_trends.price_change_pct|abs) }}%
+                    </span>
+                </div>
+                <div class="text-zinc-500 text-xs mt-1">vs previous scrape</div>
+            </div>
+            <div class="bg-zinc-800/50 rounded-lg p-4">
+                <div class="text-zinc-400 text-sm mb-1">Avg €/m² Change</div>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold {% if market_trends.ppsqm_change_pct > 0 %}text-rose-400{% elif market_trends.ppsqm_change_pct < 0 %}text-teal-400{% else %}text-zinc-400{% endif %}">
+                        {% if market_trends.ppsqm_change_pct > 0 %}↑{% elif market_trends.ppsqm_change_pct < 0 %}↓{% else %}→{% endif %}
+                        {{ "{:.1f}".format(market_trends.ppsqm_change_pct|abs) }}%
+                    </span>
+                </div>
+                <div class="text-zinc-500 text-xs mt-1">vs previous scrape</div>
+            </div>
+            <div class="bg-zinc-800/50 rounded-lg p-4">
+                <div class="text-zinc-400 text-sm mb-1">Listing Count Change</div>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold {% if market_trends.count_change > 0 %}text-teal-400{% elif market_trends.count_change < 0 %}text-rose-400{% else %}text-zinc-400{% endif %}">
+                        {% if market_trends.count_change > 0 %}+{% endif %}{{ market_trends.count_change }}
+                    </span>
+                </div>
+                <div class="text-zinc-500 text-xs mt-1">{{ market_trends.current_count }} total listings</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Listing Count Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="card p-6">
@@ -48,18 +84,90 @@
         </div>
     </div>
 
-    <!-- Charts -->
+    <!-- Charts Row 1 -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Price Over Time -->
+        <!-- Price Distribution Histogram -->
         <div class="card p-6">
-            <h2 class="text-lg font-semibold mb-4">Average Price Over Time</h2>
-            <div id="price-chart" style="height: 300px;"></div>
+            <h2 class="text-lg font-semibold mb-4">Price Distribution</h2>
+            <div id="histogram-chart" style="height: 300px;"></div>
         </div>
         
         <!-- Price per sqm by District -->
         <div class="card p-6">
             <h2 class="text-lg font-semibold mb-4">Average €/m² by District</h2>
             <div id="price-sqm-district-chart" style="height: 300px;"></div>
+        </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="grid grid-cols-1 gap-6">
+        <!-- Price Over Time -->
+        <div class="card p-6">
+            <h2 class="text-lg font-semibold mb-4">Average Price Over Time</h2>
+            <div id="price-chart" style="height: 300px;"></div>
+        </div>
+    </div>
+
+    <!-- Best Value Finder -->
+    <div class="card p-6">
+        <h2 class="text-lg font-semibold mb-4">🏆 Best Value Listings (Lowest €/m²)</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="text-zinc-400 text-sm border-b border-zinc-700">
+                    <tr>
+                        <th class="pb-3 pr-4">Title</th>
+                        <th class="pb-3 pr-4">Location</th>
+                        <th class="pb-3 pr-4">Price</th>
+                        <th class="pb-3 pr-4">€/m²</th>
+                        <th class="pb-3 pr-4">Size</th>
+                        <th class="pb-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm">
+                    {% for listing in best_value_listings %}
+                    <tr class="table-row border-b border-zinc-800">
+                        <td class="py-3 pr-4 max-w-xs truncate" title="{{ listing.title }}">
+                            <a href="/listing/{{ listing.id }}" class="hover:text-teal-400">{{ listing.title }}</a>
+                        </td>
+                        <td class="py-3 pr-4 text-zinc-400">{{ listing.location }}</td>
+                        <td class="py-3 pr-4 font-semibold text-teal-400">{{ listing.price }}</td>
+                        <td class="py-3 pr-4">
+                            <span class="px-2 py-1 rounded-full text-xs bg-amber-400/20 text-amber-400 font-semibold">
+                                €{{ "{:,.0f}".format(listing.price_per_sqm) }}
+                            </span>
+                        </td>
+                        <td class="py-3 pr-4">{{ listing.size_sqm }} m²</td>
+                        <td class="py-3">
+                            <a href="{{ listing.url }}" target="_blank" class="text-teal-400 hover:text-teal-300">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Best Value by District -->
+    <div class="card p-6">
+        <h2 class="text-lg font-semibold mb-4">🥇 Best Deal per District</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for listing in best_by_district %}
+            <div class="bg-zinc-800/50 rounded-lg p-4 hover:bg-zinc-800 transition-colors">
+                <div class="flex items-start justify-between mb-2">
+                    <span class="text-xs text-zinc-400">{{ listing.location.split(',')[1] if ',' in listing.location else listing.location }}</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs bg-teal-400/20 text-teal-400 font-semibold">
+                        €{{ "{:,.0f}".format(listing.price_per_sqm) }}/m²
+                    </span>
+                </div>
+                <div class="text-sm font-medium truncate mb-1" title="{{ listing.title }}">
+                    <a href="/listing/{{ listing.id }}" class="hover:text-teal-400">{{ listing.title }}</a>
+                </div>
+                <div class="flex items-center justify-between text-xs text-zinc-500">
+                    <span>{{ listing.price }} · {{ listing.size_sqm }} m²</span>
+                    <a href="{{ listing.url }}" target="_blank" class="text-teal-400 hover:text-teal-300">View →</a>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
@@ -106,6 +214,43 @@
 <script>
     const priceOverTime = {{ price_over_time_json | safe }};
     const pricePerSqmByDistrict = {{ price_per_sqm_by_district_json | safe }};
+    const priceDistribution = {{ price_distribution_json | safe }};
+
+    // Price Distribution Histogram
+    if (priceDistribution.length > 0) {
+        const histTrace = {
+            x: priceDistribution.map(d => `€${(d.bucket_start/1000).toFixed(0)}k-${(d.bucket_end/1000).toFixed(0)}k`),
+            y: priceDistribution.map(d => d.count),
+            type: 'bar',
+            marker: {
+                color: priceDistribution.map((d, i) => {
+                    // Gradient from teal to amber based on price
+                    const ratio = i / priceDistribution.length;
+                    return `rgba(${Math.round(45 + ratio * 206)}, ${Math.round(212 - ratio * 23)}, ${Math.round(191 - ratio * 155)}, 0.8)`;
+                })
+            }
+        };
+
+        Plotly.newPlot('histogram-chart', [histTrace], {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#a1a1aa', size: 10 },
+            margin: { t: 20, r: 20, b: 80, l: 50 },
+            xaxis: { 
+                gridcolor: '#27272a',
+                linecolor: '#27272a',
+                tickangle: -45,
+                title: { text: 'Price Range', standoff: 15 }
+            },
+            yaxis: { 
+                gridcolor: '#27272a',
+                linecolor: '#27272a',
+                title: { text: 'Number of Listings', standoff: 10 }
+            }
+        }, { responsive: true });
+    } else {
+        document.getElementById('histogram-chart').innerHTML = '<div class="text-zinc-500 text-center py-12">No data yet.</div>';
+    }
 
     // Price over time chart
     if (priceOverTime.length > 0) {

@@ -374,3 +374,281 @@ def get_recent_scrape_runs(conn: sqlite3.Connection, limit: int = 10) -> List[di
         (limit,)
     )
     return [dict(row) for row in cursor.fetchall()]
+
+
+def get_price_distribution(conn: sqlite3.Connection, bucket_size: int = 50000) -> List[dict]:
+    """Get price distribution histogram data with configurable bucket size."""
+    cursor = conn.execute(
+        """
+        SELECT 
+            (price_value / ?) * ? as bucket_start,
+            ((price_value / ?) + 1) * ? as bucket_end,
+            COUNT(*) as count,
+            location
+        FROM snapshots s
+        JOIN (
+            SELECT listing_id, MAX(scraped_at) as max_scraped
+            FROM snapshots
+            GROUP BY listing_id
+        ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
+        WHERE price_value IS NOT NULL
+        GROUP BY bucket_start, location
+        ORDER BY bucket_start
+        """,
+        (bucket_size, bucket_size, bucket_size, bucket_size)
+    )
+    return [dict(row) for row in cursor.fetchall()]
+
+
+def get_price_distribution_simple(conn: sqlite3.Connection, bucket_size: int = 50000) -> List[dict]:
+    """Get simple price distribution histogram without district breakdown."""
+    cursor = conn.execute(
+        """
+        SELECT 
+            (price_value / ?) * ? as bucket_start,
+            ((price_value / ?) + 1) * ? as bucket_end,
+            COUNT(*) as count
+        FROM snapshots s
+        JOIN (
+            SELECT listing_id, MAX(scraped_at) as max_scraped
+            FROM snapshots
+            GROUP BY listing_id
+        ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
+        WHERE price_value IS NOT NULL
+        GROUP BY bucket_start
+        ORDER BY bucket_start
+        """,
+        (bucket_size, bucket_size, bucket_size, bucket_size)
+    )
+    return [dict(row) for row in cursor.fetchall()]
+
+
+def get_best_value_listings(conn: sqlite3.Connection, limit: int = 10) -> List[dict]:
+    """Get listings with lowest price per sqm (best value)."""
+    cursor = conn.execute(
+        """
+        SELECT 
+            l.id,
+            l.ad_id,
+            l.url,
+            s.title,
+            s.price,
+            s.price_value,
+            s.location,
+            s.rooms,
+            s.size_sqm,
+            s.price_per_sqm,
+            ls.status
+        FROM listings l
+        JOIN listing_status ls ON l.id = ls.listing_id
+        JOIN snapshots s ON l.id = s.listing_id
+        JOIN (
+            SELECT listing_id, MAX(scraped_at) as max_scraped
+            FROM snapshots
+            GROUP BY listing_id
+        ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
+        WHERE s.price_per_sqm IS NOT NULL 
+          AND s.price_per_sqm > 0
+          AND ls.status = 'open'
+        ORDER BY s.price_per_sqm ASC
+        LIMIT ?
+        """,
+        (limit,)
+    )
+    return [dict(row) for row in cursor.fetchall()]
+
+
+def get_best_value_by_district(conn: sqlite3.Connection) -> List[dict]:
+    """Get the best value listing (lowest €/m²) for each district."""
+    cursor = conn.execute(
+        """
+        WITH ranked AS (
+            SELECT 
+                l.id,
+                l.ad_id,
+                l.url,
+                s.title,
+                s.price,
+                s.price_value,
+                s.location,
+                s.rooms,
+                s.size_sqm,
+                s.price_per_sqm,
+                ls.status,
+                ROW_NUMBER() OVER (PARTITION BY s.location ORDER BY s.price_per_sqm ASC) as rn
+            FROM listings l
+            JOIN listing_status ls ON l.id = ls.listing_id
+            JOIN snapshots s ON l.id = s.listing_id
+            JOIN (
+                SELECT listing_id, MAX(scraped_at) as max_scraped
+                FROM snapshots
+                GROUP BY listing_id
+            ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
+            WHERE s.price_per_sqm IS NOT NULL 
+              AND s.price_per_sqm > 0
+              AND ls.status = 'open'
+        )
+        SELECT * FROM ranked WHERE rn = 1
+        ORDER BY price_per_sqm ASC
+        """
+    )
+    return [dict(row) for row in cursor.fetchall()]
+
+
+def get_market_trends(conn: sqlite3.Connection) -> dict:
+    """Get market trends comparing recent scrapes."""
+    # Get stats from last two completed scrape runs
+    cursor = conn.execute(
+        """
+        SELECT id, started_at, listings_found
+        FROM scrape_runs 
+        WHERE status = 'completed'
+        ORDER BY started_at DESC 
+        LIMIT 2
+        """
+    )
+    runs = cursor.fetchall()
+    
+    if len(runs) < 1:
+        return {
+            "current_avg_price": 0,
+            "previous_avg_price": 0,
+            "price_change_pct": 0,
+            "current_avg_ppsqm": 0,
+            "previous_avg_ppsqm": 0,
+            "ppsqm_change_pct": 0,
+            "current_count": 0,
+            "previous_count": 0,
+            "count_change": 0,
+        }
+    
+    # Get current averages (latest snapshot per listing)
+    cursor = conn.execute(
+        """
+        SELECT 
+            AVG(price_value) as avg_price,
+            AVG(price_per_sqm) as avg_ppsqm,
+            COUNT(*) as count
+        FROM snapshots s
+        JOIN (
+            SELECT listing_id, MAX(scraped_at) as max_scraped
+            FROM snapshots
+            GROUP BY listing_id
+        ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
+        WHERE price_value IS NOT NULL
+        """
+    )
+    current = cursor.fetchone()
+    
+    current_avg_price = current["avg_price"] or 0
+    current_avg_ppsqm = current["avg_ppsqm"] or 0
+    current_count = current["count"] or 0
+    
+    # If we have a previous run, get those stats
+    previous_avg_price = current_avg_price
+    previous_avg_ppsqm = current_avg_ppsqm
+    previous_count = current_count
+    
+    if len(runs) >= 2:
+        # Get stats from before the latest scrape
+        prev_run_time = runs[1]["started_at"]
+        cursor = conn.execute(
+            """
+            SELECT 
+                AVG(price_value) as avg_price,
+                AVG(price_per_sqm) as avg_ppsqm,
+                COUNT(*) as count
+            FROM snapshots
+            WHERE scraped_at < ? AND price_value IS NOT NULL
+            GROUP BY listing_id
+            """,
+            (prev_run_time,)
+        )
+        prev_rows = cursor.fetchall()
+        if prev_rows:
+            prices = [r["avg_price"] for r in prev_rows if r["avg_price"]]
+            ppsqms = [r["avg_ppsqm"] for r in prev_rows if r["avg_ppsqm"]]
+            if prices:
+                previous_avg_price = sum(prices) / len(prices)
+            if ppsqms:
+                previous_avg_ppsqm = sum(ppsqms) / len(ppsqms)
+            previous_count = len(prev_rows)
+    
+    # Calculate changes
+    price_change_pct = 0
+    if previous_avg_price > 0:
+        price_change_pct = ((current_avg_price - previous_avg_price) / previous_avg_price) * 100
+    
+    ppsqm_change_pct = 0
+    if previous_avg_ppsqm > 0:
+        ppsqm_change_pct = ((current_avg_ppsqm - previous_avg_ppsqm) / previous_avg_ppsqm) * 100
+    
+    return {
+        "current_avg_price": round(current_avg_price),
+        "previous_avg_price": round(previous_avg_price),
+        "price_change_pct": round(price_change_pct, 2),
+        "current_avg_ppsqm": round(current_avg_ppsqm),
+        "previous_avg_ppsqm": round(previous_avg_ppsqm),
+        "ppsqm_change_pct": round(ppsqm_change_pct, 2),
+        "current_count": current_count,
+        "previous_count": previous_count,
+        "count_change": current_count - previous_count,
+    }
+
+
+def get_listing_price_history(conn: sqlite3.Connection, listing_id: int) -> List[dict]:
+    """Get price history for a specific listing."""
+    cursor = conn.execute(
+        """
+        SELECT 
+            scraped_at,
+            title,
+            price,
+            price_value,
+            price_per_sqm,
+            location,
+            rooms,
+            size_sqm
+        FROM snapshots
+        WHERE listing_id = ?
+        ORDER BY scraped_at ASC
+        """,
+        (listing_id,)
+    )
+    return [dict(row) for row in cursor.fetchall()]
+
+
+def get_listing_details(conn: sqlite3.Connection, listing_id: int) -> Optional[dict]:
+    """Get full details for a specific listing."""
+    cursor = conn.execute(
+        """
+        SELECT 
+            l.id,
+            l.ad_id,
+            l.url,
+            l.first_seen_at,
+            ls.status,
+            ls.closed_at,
+            s.title,
+            s.price,
+            s.price_value,
+            s.location,
+            s.rooms,
+            s.size_sqm,
+            s.size_sqm_value,
+            s.price_per_sqm,
+            s.scraped_at
+        FROM listings l
+        JOIN listing_status ls ON l.id = ls.listing_id
+        LEFT JOIN snapshots s ON l.id = s.listing_id
+        LEFT JOIN (
+            SELECT listing_id, MAX(scraped_at) as max_scraped
+            FROM snapshots
+            GROUP BY listing_id
+        ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
+        WHERE l.id = ?
+        """,
+        (listing_id,)
+    )
+    row = cursor.fetchone()
+    return dict(row) if row else None

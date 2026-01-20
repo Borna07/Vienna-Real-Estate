@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}{{ listing.title }} - Vienna Apartment Tracker{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Back Link -->
+    <div>
+        <a href="/listings" class="text-zinc-400 hover:text-teal-400 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back to Listings
+        </a>
+    </div>
+
+    <!-- Header -->
+    <div class="card p-6">
+        <div class="flex items-start justify-between flex-wrap gap-4">
+            <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                    <h1 class="text-2xl font-bold">{{ listing.title }}</h1>
+                    {% if listing.status == 'open' %}
+                    <span class="px-2 py-1 rounded-full text-xs badge-open">Active</span>
+                    {% else %}
+                    <span class="px-2 py-1 rounded-full text-xs badge-closed">Closed</span>
+                    {% endif %}
+                </div>
+                <p class="text-zinc-400">{{ listing.location }}</p>
+            </div>
+            <a href="{{ listing.url }}" target="_blank" 
+               class="px-4 py-2 bg-teal-400 hover:bg-teal-300 text-zinc-900 rounded-lg font-medium transition-colors flex items-center gap-2">
+                View on Willhaben
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <!-- Key Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="card p-4">
+            <div class="text-zinc-400 text-sm mb-1">Current Price</div>
+            <div class="text-xl font-bold text-teal-400">{{ listing.price }}</div>
+        </div>
+        <div class="card p-4">
+            <div class="text-zinc-400 text-sm mb-1">Price per m²</div>
+            <div class="text-xl font-bold text-amber-400">
+                {% if listing.price_per_sqm %}€{{ "{:,.0f}".format(listing.price_per_sqm) }}{% else %}-{% endif %}
+            </div>
+        </div>
+        <div class="card p-4">
+            <div class="text-zinc-400 text-sm mb-1">Size</div>
+            <div class="text-xl font-bold">{{ listing.size_sqm }} m²</div>
+        </div>
+        <div class="card p-4">
+            <div class="text-zinc-400 text-sm mb-1">Rooms</div>
+            <div class="text-xl font-bold">{{ listing.rooms }}</div>
+        </div>
+    </div>
+
+    <!-- Price History Chart -->
+    <div class="card p-6">
+        <h2 class="text-lg font-semibold mb-4">Price History</h2>
+        <div id="price-history-chart" style="height: 350px;"></div>
+    </div>
+
+    <!-- Price History Table -->
+    <div class="card p-6">
+        <h2 class="text-lg font-semibold mb-4">All Snapshots</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="text-zinc-400 text-sm border-b border-zinc-700">
+                    <tr>
+                        <th class="pb-3 pr-4">Date</th>
+                        <th class="pb-3 pr-4">Price</th>
+                        <th class="pb-3 pr-4">€/m²</th>
+                        <th class="pb-3">Change</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm" id="history-table-body">
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Listing Details -->
+    <div class="card p-6">
+        <h2 class="text-lg font-semibold mb-4">Details</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <span class="text-zinc-400 text-sm">Ad ID:</span>
+                <span class="ml-2">{{ listing.ad_id }}</span>
+            </div>
+            <div>
+                <span class="text-zinc-400 text-sm">First Seen:</span>
+                <span class="ml-2">{{ listing.first_seen_at }}</span>
+            </div>
+            {% if listing.closed_at %}
+            <div>
+                <span class="text-zinc-400 text-sm">Closed At:</span>
+                <span class="ml-2">{{ listing.closed_at }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const priceHistory = {{ price_history_json | safe }};
+    
+    // Price History Chart
+    if (priceHistory.length > 0) {
+        const priceTrace = {
+            x: priceHistory.map(d => d.scraped_at),
+            y: priceHistory.map(d => d.price_value),
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'Price',
+            line: { color: '#2dd4bf', width: 3 },
+            marker: { size: 10, color: '#2dd4bf' },
+            fill: 'tozeroy',
+            fillcolor: 'rgba(45, 212, 191, 0.15)'
+        };
+
+        Plotly.newPlot('price-history-chart', [priceTrace], {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#a1a1aa' },
+            margin: { t: 30, r: 30, b: 50, l: 80 },
+            xaxis: { 
+                gridcolor: '#27272a',
+                linecolor: '#27272a',
+                title: { text: 'Date', standoff: 15 }
+            },
+            yaxis: { 
+                gridcolor: '#27272a',
+                linecolor: '#27272a',
+                tickformat: '€,.0f',
+                title: { text: 'Price', standoff: 10 }
+            }
+        }, { responsive: true });
+
+        // Populate history table
+        const tbody = document.getElementById('history-table-body');
+        priceHistory.forEach((snapshot, idx) => {
+            const row = document.createElement('tr');
+            row.className = 'table-row border-b border-zinc-800';
+            
+            // Calculate change from previous
+            let changeHtml = '-';
+            if (idx > 0 && priceHistory[idx-1].price_value && snapshot.price_value) {
+                const change = snapshot.price_value - priceHistory[idx-1].price_value;
+                const pctChange = ((change / priceHistory[idx-1].price_value) * 100).toFixed(1);
+                if (change > 0) {
+                    changeHtml = `<span class="text-rose-400">+€${change.toLocaleString()} (+${pctChange}%)</span>`;
+                } else if (change < 0) {
+                    changeHtml = `<span class="text-teal-400">€${change.toLocaleString()} (${pctChange}%)</span>`;
+                } else {
+                    changeHtml = '<span class="text-zinc-500">No change</span>';
+                }
+            }
+            
+            row.innerHTML = `
+                <td class="py-3 pr-4">${new Date(snapshot.scraped_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+                <td class="py-3 pr-4 font-semibold text-teal-400">${snapshot.price || '-'}</td>
+                <td class="py-3 pr-4 text-amber-400">${snapshot.price_per_sqm ? '€' + Math.round(snapshot.price_per_sqm).toLocaleString() : '-'}</td>
+                <td class="py-3">${changeHtml}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    } else {
+        document.getElementById('price-history-chart').innerHTML = '<div class="text-zinc-500 text-center py-12">No price history available.</div>';
+    }
+</script>
+{% endblock %}
