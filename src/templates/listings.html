@@ -142,13 +142,18 @@
     const headers = table.querySelectorAll('th[data-sort]');
     let rows = Array.from(tbody.querySelectorAll('tr'));
 
-    // Populate location filter
+    // Populate location filter with district names
     const locations = [...new Set(rows.map(r => r.dataset.location))].filter(Boolean).sort();
     locations.forEach(loc => {
         const opt = document.createElement('option');
-        // Capitalize for display
         opt.value = loc;
-        opt.textContent = loc.split(',')[0].replace('wien', 'Wien');
+        // Extract district name (e.g., "Wien, 03. Bezirk, Landstraße" -> "03. Bezirk, Landstraße")
+        const parts = loc.split(', ');
+        if (parts.length >= 2) {
+            opt.textContent = parts.slice(1).join(', ').replace(/\b\w/g, c => c.toUpperCase());
+        } else {
+            opt.textContent = loc;
+        }
         locationFilter.appendChild(opt);
     });
 
