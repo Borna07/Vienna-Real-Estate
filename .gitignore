@@ -39,10 +39,6 @@ env/
 *.swo
 *~
 
-# Database
-data/*.db
-*.db
-
 # Logs
 logs/
 *.log
