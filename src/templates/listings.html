@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Listings - Vienna Apartment Tracker{% endblock %}
+{% block title %}{% if is_rent %}Rent listings{% else %}Listings{% endif %} - Vienna Apartment Tracker{% endblock %}
 
 {% block content %}
 <div class="space-y-6">
     <!-- Header -->
     <div class="flex items-center justify-between flex-wrap gap-4">
         <div>
-            <h1 class="text-3xl font-bold mb-2">All Listings</h1>
-            <p class="text-zinc-400"><span id="visible-count">{{ listings|length }}</span> of {{ listings|length }} apartments</p>
+            <h1 class="text-3xl font-bold mb-2">{% if is_rent %}Rental listings{% else %}All listings{% endif %}</h1>
+            <p class="text-zinc-400"><span id="visible-count">{{ listings|length }}</span> of {{ listings|length }} {% if is_rent %}rentals{% else %}apartments{% endif %}</p>
         </div>
         <div class="flex gap-3 flex-wrap">
             <input type="text" id="search" placeholder="Search title/location..." 
@@ -31,12 +31,12 @@
     <div class="card p-4">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-                <label class="text-zinc-400 text-xs block mb-1">Min Price (€)</label>
+                <label class="text-zinc-400 text-xs block mb-1">{% if is_rent %}Min rent (€/mo){% else %}Min price (€){% endif %}</label>
                 <input type="number" id="min-price" placeholder="0" 
                        class="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm focus:outline-none focus:border-teal-400">
             </div>
             <div>
-                <label class="text-zinc-400 text-xs block mb-1">Max Price (€)</label>
+                <label class="text-zinc-400 text-xs block mb-1">{% if is_rent %}Max rent (€/mo){% else %}Max price (€){% endif %}</label>
                 <input type="number" id="max-price" placeholder="∞" 
                        class="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm focus:outline-none focus:border-teal-400">
             </div>
@@ -72,7 +72,7 @@
                             Price <span class="sort-icon">↕</span>
                         </th>
                         <th class="p-4 cursor-pointer hover:text-teal-400 select-none" data-sort="ppsqm">
-                            €/m² <span class="sort-icon">↕</span>
+                            {% if is_rent %}€/m²/mo{% else %}€/m²{% endif %} <span class="sort-icon">↕</span>
                         </th>
                         <th class="p-4 cursor-pointer hover:text-teal-400 select-none" data-sort="rooms">
                             Rooms <span class="sort-icon">↕</span>

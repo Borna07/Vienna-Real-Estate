@@ -6,11 +6,11 @@
 <div class="space-y-8">
     <!-- Back Link -->
     <div>
-        <a href="/listings" class="text-zinc-400 hover:text-teal-400 flex items-center gap-2">
+        <a href="{{ listings_back_href }}" class="text-zinc-400 hover:text-teal-400 flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
             </svg>
-            Back to Listings
+            {% if is_rent %}Back to rent listings{% else %}Back to listings{% endif %}
         </a>
     </div>
 
@@ -41,11 +41,11 @@
     <!-- Key Stats -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="card p-4">
-            <div class="text-zinc-400 text-sm mb-1">Current Price</div>
+            <div class="text-zinc-400 text-sm mb-1">{% if is_rent %}Current rent{% else %}Current price{% endif %}</div>
             <div class="text-xl font-bold text-teal-400">{{ listing.price }}</div>
         </div>
         <div class="card p-4">
-            <div class="text-zinc-400 text-sm mb-1">Price per m²</div>
+            <div class="text-zinc-400 text-sm mb-1">{% if is_rent %}Rent per m² (monthly){% else %}Price per m²{% endif %}</div>
             <div class="text-xl font-bold text-amber-400">
                 {% if listing.price_per_sqm %}€{{ "{:,.0f}".format(listing.price_per_sqm) }}{% else %}-{% endif %}
             </div>
@@ -62,7 +62,7 @@
 
     <!-- Price History Chart -->
     <div class="card p-6">
-        <h2 class="text-lg font-semibold mb-4">Price History</h2>
+        <h2 class="text-lg font-semibold mb-4">{% if is_rent %}Rent history{% else %}Price history{% endif %}</h2>
         <div id="price-history-chart" style="height: 350px;"></div>
     </div>
 
@@ -75,7 +75,7 @@
                     <tr>
                         <th class="pb-3 pr-4">Date</th>
                         <th class="pb-3 pr-4">Price</th>
-                        <th class="pb-3 pr-4">€/m²</th>
+                        <th class="pb-3 pr-4">{% if is_rent %}€/m²/mo{% else %}€/m²{% endif %}</th>
                         <th class="pb-3">Change</th>
                     </tr>
                 </thead>
@@ -111,6 +111,7 @@
 
 {% block scripts %}
 <script>
+    const isRent = {{ is_rent | tojson }};
     const priceHistory = {{ price_history_json | safe }};
     
     // Price History Chart
@@ -141,7 +142,7 @@
                 gridcolor: '#27272a',
                 linecolor: '#27272a',
                 tickformat: '€,.0f',
-                title: { text: 'Price', standoff: 10 }
+                title: { text: isRent ? 'Rent (€/mo)' : 'Price', standoff: 10 }
             }
         }, { responsive: true });
 

@@ -1,31 +1,31 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard - Vienna Apartment Tracker{% endblock %}
+{% block title %}{% if is_rent %}Rentals — {% endif %}Dashboard - Vienna Apartment Tracker{% endblock %}
 
 {% block content %}
 <div class="space-y-8">
     <!-- Header -->
     <div>
-        <h1 class="text-3xl font-bold mb-2">Apartment Price Dashboard</h1>
-        <p class="text-zinc-400">Track Vienna apartment listings and price trends</p>
+        <h1 class="text-3xl font-bold mb-2">{% if is_rent %}Rental market dashboard{% else %}Apartment price dashboard{% endif %}</h1>
+        <p class="text-zinc-400">{% if is_rent %}Track Vienna Mietwohnungen — cold rent (monthly) and €/m² per month{% else %}Track Vienna apartment listings and price trends{% endif %}</p>
     </div>
 
     <!-- Price Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="card p-6 gradient-border">
-            <div class="text-zinc-400 text-sm font-medium mb-2">Median Price</div>
-            <div class="stat-value">€{{ "{:,.0f}".format(median_price) }}</div>
-            <div class="text-zinc-500 text-sm mt-2">Middle value of all listings</div>
+            <div class="text-zinc-400 text-sm font-medium mb-2">{% if is_rent %}Median rent{% else %}Median price{% endif %}</div>
+            <div class="stat-value">€{{ "{:,.0f}".format(median_price) }}{% if is_rent %}<span class="text-lg text-zinc-500">/mo</span>{% endif %}</div>
+            <div class="text-zinc-500 text-sm mt-2">{% if is_rent %}Middle monthly rent{% else %}Middle value of all listings{% endif %}</div>
         </div>
         <div class="card p-6 gradient-border">
-            <div class="text-zinc-400 text-sm font-medium mb-2">Average Price</div>
-            <div class="text-3xl font-bold text-amber-400">€{{ "{:,.0f}".format(avg_price) }}</div>
-            <div class="text-zinc-500 text-sm mt-2">Mean of all listings</div>
+            <div class="text-zinc-400 text-sm font-medium mb-2">{% if is_rent %}Average rent{% else %}Average price{% endif %}</div>
+            <div class="text-3xl font-bold text-amber-400">€{{ "{:,.0f}".format(avg_price) }}{% if is_rent %}<span class="text-base text-zinc-500">/mo</span>{% endif %}</div>
+            <div class="text-zinc-500 text-sm mt-2">{% if is_rent %}Mean monthly rent{% else %}Mean of all listings{% endif %}</div>
         </div>
         <div class="card p-6 gradient-border">
-            <div class="text-zinc-400 text-sm font-medium mb-2">Average €/m²</div>
+            <div class="text-zinc-400 text-sm font-medium mb-2">{% if is_rent %}Avg €/m² / month{% else %}Average €/m²{% endif %}</div>
             <div class="text-3xl font-bold text-rose-400">€{{ "{:,.0f}".format(avg_price_per_sqm) }}</div>
-            <div class="text-zinc-500 text-sm mt-2">Price per square meter</div>
+            <div class="text-zinc-500 text-sm mt-2">{% if is_rent %}Rent per m² per month{% else %}Price per square meter{% endif %}</div>
         </div>
     </div>
 
@@ -34,7 +34,7 @@
         <h2 class="text-lg font-semibold mb-4">Market Trends</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-zinc-800/50 rounded-lg p-4">
-                <div class="text-zinc-400 text-sm mb-1">Avg Price Change</div>
+                <div class="text-zinc-400 text-sm mb-1">{% if is_rent %}Avg rent change{% else %}Avg price change{% endif %}</div>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold {% if market_trends.price_change_pct > 0 %}text-rose-400{% elif market_trends.price_change_pct < 0 %}text-teal-400{% else %}text-zinc-400{% endif %}">
                         {% if market_trends.price_change_pct > 0 %}↑{% elif market_trends.price_change_pct < 0 %}↓{% else %}→{% endif %}
@@ -44,7 +44,7 @@
                 <div class="text-zinc-500 text-xs mt-1">vs previous scrape</div>
             </div>
             <div class="bg-zinc-800/50 rounded-lg p-4">
-                <div class="text-zinc-400 text-sm mb-1">Avg €/m² Change</div>
+                <div class="text-zinc-400 text-sm mb-1">{% if is_rent %}Avg €/m²/mo change{% else %}Avg €/m² change{% endif %}</div>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold {% if market_trends.ppsqm_change_pct > 0 %}text-rose-400{% elif market_trends.ppsqm_change_pct < 0 %}text-teal-400{% else %}text-zinc-400{% endif %}">
                         {% if market_trends.ppsqm_change_pct > 0 %}↑{% elif market_trends.ppsqm_change_pct < 0 %}↓{% else %}→{% endif %}
@@ -88,13 +88,13 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Price Distribution Histogram -->
         <div class="card p-6">
-            <h2 class="text-lg font-semibold mb-4">Price Distribution</h2>
+            <h2 class="text-lg font-semibold mb-4">{% if is_rent %}Rent distribution (€/month){% else %}Price distribution{% endif %}</h2>
             <div id="histogram-chart" style="height: 300px;"></div>
         </div>
         
         <!-- Price per sqm by District -->
         <div class="card p-6">
-            <h2 class="text-lg font-semibold mb-4">Average €/m² by District</h2>
+            <h2 class="text-lg font-semibold mb-4">{% if is_rent %}Average €/m² per month by district{% else %}Average €/m² by district{% endif %}</h2>
             <div id="price-sqm-district-chart" style="height: 300px;"></div>
         </div>
     </div>
@@ -103,14 +103,14 @@
     <div class="grid grid-cols-1 gap-6">
         <!-- Price Over Time -->
         <div class="card p-6">
-            <h2 class="text-lg font-semibold mb-4">Average Price Over Time</h2>
+            <h2 class="text-lg font-semibold mb-4">{% if is_rent %}Average rent over time{% else %}Average price over time{% endif %}</h2>
             <div id="price-chart" style="height: 300px;"></div>
         </div>
     </div>
 
     <!-- Best Value Finder -->
     <div class="card p-6">
-        <h2 class="text-lg font-semibold mb-4">🏆 Best Value Listings (Lowest €/m²)</h2>
+        <h2 class="text-lg font-semibold mb-4">🏆 {% if is_rent %}Best value rentals (lowest €/m²/mo){% else %}Best value listings (lowest €/m²){% endif %}</h2>
         <div class="overflow-x-auto">
             <table class="w-full text-left">
                 <thead class="text-zinc-400 text-sm border-b border-zinc-700">
@@ -118,7 +118,7 @@
                         <th class="pb-3 pr-4">Title</th>
                         <th class="pb-3 pr-4">Location</th>
                         <th class="pb-3 pr-4">Price</th>
-                        <th class="pb-3 pr-4">€/m²</th>
+                        <th class="pb-3 pr-4">{% if is_rent %}€/m²/mo{% else %}€/m²{% endif %}</th>
                         <th class="pb-3 pr-4">Size</th>
                         <th class="pb-3">Action</th>
                     </tr>
@@ -149,14 +149,14 @@
 
     <!-- Best Value by District -->
     <div class="card p-6">
-        <h2 class="text-lg font-semibold mb-4">🥇 Best Deal per District</h2>
+        <h2 class="text-lg font-semibold mb-4">🥇 {% if is_rent %}Best deal per district (rent){% else %}Best deal per district{% endif %}</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {% for listing in best_by_district %}
             <div class="bg-zinc-800/50 rounded-lg p-4 hover:bg-zinc-800 transition-colors">
                 <div class="flex items-start justify-between mb-2">
                     <span class="text-xs text-zinc-400">{{ listing.location.split(',')[1] if ',' in listing.location else listing.location }}</span>
                     <span class="px-2 py-0.5 rounded-full text-xs bg-teal-400/20 text-teal-400 font-semibold">
-                        €{{ "{:,.0f}".format(listing.price_per_sqm) }}/m²
+                        €{{ "{:,.0f}".format(listing.price_per_sqm) }}/m²{% if is_rent %}/mo{% endif %}
                     </span>
                 </div>
                 <div class="text-sm font-medium truncate mb-1" title="{{ listing.title }}">
@@ -179,6 +179,7 @@
                 <thead class="text-zinc-400 text-sm border-b border-zinc-700">
                     <tr>
                         <th class="pb-3 pr-4">Started</th>
+                        <th class="pb-3 pr-4">Market</th>
                         <th class="pb-3 pr-4">Status</th>
                         <th class="pb-3 pr-4">Found</th>
                         <th class="pb-3 pr-4">New</th>
@@ -189,6 +190,7 @@
                     {% for run in recent_runs %}
                     <tr class="table-row border-b border-zinc-800">
                         <td class="py-3 pr-4">{{ run.started_at }}</td>
+                        <td class="py-3 pr-4 text-zinc-400">{{ run.market or 'sale' }}</td>
                         <td class="py-3 pr-4">
                             {% if run.status == 'completed' %}
                             <span class="px-2 py-1 rounded-full text-xs badge-open">Completed</span>
@@ -212,6 +214,7 @@
 
 {% block scripts %}
 <script>
+    const isRent = {{ is_rent | tojson }};
     const priceOverTime = {{ price_over_time_json | safe }};
     const pricePerSqmByDistrict = {{ price_per_sqm_by_district_json | safe }};
     const priceDistribution = {{ price_distribution_json | safe }};
@@ -219,7 +222,9 @@
     // Price Distribution Histogram
     if (priceDistribution.length > 0) {
         const histTrace = {
-            x: priceDistribution.map(d => `€${(d.bucket_start/1000).toFixed(0)}k-${(d.bucket_end/1000).toFixed(0)}k`),
+            x: priceDistribution.map(d => isRent
+                ? `€${d.bucket_start}-€${d.bucket_end}/mo`
+                : `€${(d.bucket_start/1000).toFixed(0)}k-${(d.bucket_end/1000).toFixed(0)}k`),
             y: priceDistribution.map(d => d.count),
             type: 'bar',
             marker: {
@@ -240,7 +245,7 @@
                 gridcolor: '#27272a',
                 linecolor: '#27272a',
                 tickangle: -45,
-                title: { text: 'Price Range', standoff: 15 }
+                title: { text: isRent ? 'Rent range (€/mo)' : 'Price range', standoff: 15 }
             },
             yaxis: { 
                 gridcolor: '#27272a',
@@ -278,7 +283,8 @@
             yaxis: { 
                 gridcolor: '#27272a',
                 linecolor: '#27272a',
-                tickformat: '€,.0f'
+                tickformat: '€,.0f',
+                title: isRent ? { text: '€/month', standoff: 10 } : undefined
             }
         }, { responsive: true });
     } else {
@@ -313,7 +319,7 @@
                 gridcolor: '#27272a',
                 linecolor: '#27272a',
                 tickformat: '€,.0f',
-                title: { text: '€/m²', standoff: 10 }
+                title: { text: isRent ? '€/m²/mo' : '€/m²', standoff: 10 }
             }
         }, { responsive: true });
     } else {

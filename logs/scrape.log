@@ -40,3 +40,222 @@ playwright._impl._errors.TimeoutError: Page.wait_for_function: Timeout 120000ms 
 2026-01-20 07:07:22,449 - INFO - Scraped 659 listings
 2026-01-20 07:07:22,461 - INFO - Marked 3 listings as closed
 2026-01-20 07:07:22,609 - INFO - Scrape completed: 659 found, 2 new, 3 closed
+2026-01-27 20:24:42,182 - INFO - Starting scrape run...
+2026-01-27 20:24:42,198 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-01-27 20:24:42,328 - INFO - Open listings before scrape: 663
+2026-01-27 20:25:44,973 - INFO - Scraped 672 listings
+2026-01-27 20:25:44,989 - ERROR - Scrape failed
+Traceback (most recent call last):
+  File "D:\03 Python\24 Vienna Crawler\Vienna-Real-Estate\scripts\scrape.py", line 93, in run_scrape
+    insert_snapshot(
+  File "D:\03 Python\24 Vienna Crawler\Vienna-Real-Estate\src\db.py", line 120, in insert_snapshot
+    conn.execute(
+sqlite3.IntegrityError: UNIQUE constraint failed: snapshots.listing_id, snapshots.scraped_at
+2026-01-27 20:31:37,273 - INFO - Starting scrape run...
+2026-01-27 20:31:37,275 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-01-27 20:31:37,372 - INFO - Open listings before scrape: 707
+2026-01-27 20:32:32,318 - INFO - Scraped 672 listings
+2026-01-27 20:32:32,334 - INFO - Marked 41 listings as closed
+2026-01-27 20:32:32,476 - INFO - Scrape completed: 672 found, 6 new, 41 closed
+2026-01-27 20:40:00,327 - INFO - Starting scrape run...
+2026-01-27 20:40:00,327 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-01-27 20:40:00,450 - INFO - Open listings before scrape: 667
+2026-01-27 20:40:55,691 - INFO - Scraped 672 listings
+2026-01-27 20:40:55,722 - INFO - Marked 1 listings as closed
+2026-01-27 20:40:55,878 - INFO - Scrape completed: 672 found, 6 new, 1 closed
+2026-01-28 11:51:43,651 - INFO - Starting scrape run...
+2026-01-28 11:51:43,713 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-01-28 11:51:43,791 - INFO - Open listings before scrape: 667
+2026-01-28 11:52:47,030 - INFO - Scraped 671 listings
+2026-01-28 11:52:47,046 - INFO - Marked 7 listings as closed
+2026-01-28 11:52:47,241 - INFO - Scrape completed: 671 found, 11 new, 7 closed
+2026-01-29 08:02:25,096 - INFO - Starting scrape run...
+2026-01-29 08:02:25,127 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-01-29 08:02:25,243 - INFO - Open listings before scrape: 666
+2026-01-29 08:03:24,977 - INFO - Scraped 666 listings
+2026-01-29 08:03:25,102 - INFO - Marked 16 listings as closed
+2026-01-29 08:03:25,237 - INFO - Scrape completed: 666 found, 16 new, 16 closed
+2026-01-31 11:51:52,089 - INFO - Starting scrape run...
+2026-01-31 11:51:52,542 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-01-31 11:51:52,672 - INFO - Open listings before scrape: 660
+2026-01-31 11:52:58,476 - INFO - Scraped 663 listings
+2026-01-31 11:52:58,568 - INFO - Marked 18 listings as closed
+2026-01-31 11:52:58,847 - INFO - Scrape completed: 663 found, 21 new, 18 closed
+2026-02-03 11:51:51,124 - INFO - Starting scrape run...
+2026-02-03 11:51:51,234 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-02-03 11:51:51,322 - INFO - Open listings before scrape: 657
+2026-02-03 11:52:54,245 - INFO - Scraped 656 listings
+2026-02-03 11:52:54,442 - INFO - Marked 24 listings as closed
+2026-02-03 11:52:54,717 - INFO - Scrape completed: 656 found, 23 new, 24 closed
+2026-02-06 11:51:49,338 - INFO - Starting scrape run...
+2026-02-06 11:51:49,490 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-02-06 11:51:49,612 - INFO - Open listings before scrape: 650
+2026-02-06 11:52:52,833 - INFO - Scraped 641 listings
+2026-02-06 11:52:52,874 - INFO - Marked 38 listings as closed
+2026-02-06 11:52:53,183 - INFO - Scrape completed: 641 found, 29 new, 38 closed
+2026-02-09 11:51:46,798 - INFO - Starting scrape run...
+2026-02-09 11:51:46,913 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-02-09 11:51:47,027 - INFO - Open listings before scrape: 636
+2026-02-09 11:52:50,457 - INFO - Scraped 643 listings
+2026-02-09 11:52:50,475 - INFO - Marked 22 listings as closed
+2026-02-09 11:52:50,692 - INFO - Scrape completed: 643 found, 29 new, 22 closed
+2026-02-15 11:51:41,823 - INFO - Starting scrape run...
+2026-02-15 11:51:41,916 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-02-15 11:51:41,995 - INFO - Open listings before scrape: 638
+2026-02-15 11:52:42,832 - INFO - Scraped 639 listings
+2026-02-15 11:52:42,851 - INFO - Marked 69 listings as closed
+2026-02-15 11:52:43,102 - INFO - Scrape completed: 639 found, 70 new, 69 closed
+2026-02-18 11:51:41,896 - INFO - Starting scrape run...
+2026-02-18 11:51:41,951 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-02-18 11:51:42,051 - INFO - Open listings before scrape: 634
+2026-02-18 11:52:44,695 - INFO - Scraped 640 listings
+2026-02-18 11:52:44,715 - INFO - Marked 38 listings as closed
+2026-02-18 11:52:44,996 - INFO - Scrape completed: 640 found, 44 new, 38 closed
+2026-02-21 11:51:45,270 - INFO - Starting scrape run...
+2026-02-21 11:51:45,439 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-02-21 11:51:45,548 - INFO - Open listings before scrape: 635
+2026-02-21 11:52:51,066 - INFO - Scraped 631 listings
+2026-02-21 11:52:51,087 - INFO - Marked 37 listings as closed
+2026-02-21 11:52:51,374 - INFO - Scrape completed: 631 found, 33 new, 37 closed
+2026-02-24 11:51:42,402 - INFO - Starting scrape run...
+2026-02-24 11:51:42,476 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-02-24 11:51:42,587 - INFO - Open listings before scrape: 626
+2026-02-24 11:52:43,174 - INFO - Scraped 636 listings
+2026-02-24 11:52:43,193 - INFO - Marked 36 listings as closed
+2026-02-24 11:52:43,369 - INFO - Scrape completed: 636 found, 46 new, 36 closed
+2026-02-27 11:51:42,026 - INFO - Starting scrape run...
+2026-02-27 11:51:42,099 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-02-27 11:51:42,233 - INFO - Open listings before scrape: 631
+2026-02-27 11:51:54,934 - ERROR - Scrape failed
+Traceback (most recent call last):
+  File "D:\03 Python\24 Vienna Crawler\Vienna-Real-Estate\scripts\scrape.py", line 71, in run_scrape
+    listings = scrape_listings(scrape_url, headless=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\03 Python\24 Vienna Crawler\Vienna-Real-Estate\src\scraper.py", line 169, in scrape_listings
+    page.goto(page_url, wait_until="load", timeout=120000)
+  File "D:\03 Python\24 Vienna Crawler\Vienna-Real-Estate\myenv\Lib\site-packages\playwright\sync_api\_generated.py", line 9050, in goto
+    self._sync(
+  File "D:\03 Python\24 Vienna Crawler\Vienna-Real-Estate\myenv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "D:\03 Python\24 Vienna Crawler\Vienna-Real-Estate\myenv\Lib\site-packages\playwright\_impl\_page.py", line 552, in goto
+    return await self._main_frame.goto(**locals_to_params(locals()))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\03 Python\24 Vienna Crawler\Vienna-Real-Estate\myenv\Lib\site-packages\playwright\_impl\_frame.py", line 153, in goto
+    await self._channel.send(
+  File "D:\03 Python\24 Vienna Crawler\Vienna-Real-Estate\myenv\Lib\site-packages\playwright\_impl\_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\03 Python\24 Vienna Crawler\Vienna-Real-Estate\myenv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+Call log:
+  - navigating to "https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60", waiting until "load"
+
+2026-03-05 11:51:52,094 - INFO - Starting scrape run...
+2026-03-05 11:51:52,153 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-03-05 11:51:52,377 - INFO - Open listings before scrape: 631
+2026-03-05 11:52:53,011 - INFO - Scraped 636 listings
+2026-03-05 11:52:53,151 - INFO - Marked 92 listings as closed
+2026-03-05 11:52:53,355 - INFO - Scrape completed: 636 found, 97 new, 92 closed
+2026-03-08 11:51:55,136 - INFO - Starting scrape run...
+2026-03-08 11:51:55,288 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-03-08 11:51:55,391 - INFO - Open listings before scrape: 631
+2026-03-08 11:52:58,988 - INFO - Scraped 618 listings
+2026-03-08 11:52:59,188 - INFO - Marked 52 listings as closed
+2026-03-08 11:52:59,394 - INFO - Scrape completed: 618 found, 39 new, 52 closed
+2026-03-11 11:51:48,190 - INFO - Starting scrape run...
+2026-03-11 11:51:48,262 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-03-11 11:51:48,394 - INFO - Open listings before scrape: 614
+2026-03-11 11:52:46,110 - INFO - Scraped 620 listings
+2026-03-11 11:52:46,129 - INFO - Marked 21 listings as closed
+2026-03-11 11:52:46,435 - INFO - Scrape completed: 620 found, 27 new, 21 closed
+2026-03-14 11:51:44,578 - INFO - Starting scrape run...
+2026-03-14 11:51:44,719 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-03-14 11:51:44,797 - INFO - Open listings before scrape: 611
+2026-03-14 11:52:50,554 - INFO - Scraped 625 listings
+2026-03-14 11:52:50,569 - INFO - Marked 36 listings as closed
+2026-03-14 11:52:50,929 - INFO - Scrape completed: 625 found, 50 new, 36 closed
+2026-03-17 11:51:41,904 - INFO - Starting scrape run...
+2026-03-17 11:51:41,966 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-03-17 11:51:42,091 - INFO - Open listings before scrape: 610
+2026-03-17 11:52:39,394 - INFO - Scraped 625 listings
+2026-03-17 11:52:39,425 - INFO - Marked 23 listings as closed
+2026-03-17 11:52:39,659 - INFO - Scrape completed: 625 found, 38 new, 23 closed
+2026-03-20 11:51:42,408 - INFO - Starting scrape run...
+2026-03-20 11:51:42,501 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-03-20 11:51:42,595 - INFO - Open listings before scrape: 610
+2026-03-20 11:52:40,659 - INFO - Scraped 615 listings
+2026-03-20 11:52:40,690 - INFO - Marked 41 listings as closed
+2026-03-20 11:52:40,862 - INFO - Scrape completed: 615 found, 46 new, 41 closed
+2026-03-23 11:51:56,399 - INFO - Starting scrape run...
+2026-03-23 11:51:56,491 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-03-23 11:51:56,592 - INFO - Open listings before scrape: 599
+2026-03-23 11:53:07,856 - INFO - Scraped 615 listings
+2026-03-23 11:53:07,881 - INFO - Marked 23 listings as closed
+2026-03-23 11:53:08,205 - INFO - Scrape completed: 615 found, 39 new, 23 closed
+2026-03-26 11:52:01,915 - INFO - Starting scrape run...
+2026-03-26 11:52:02,047 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-03-26 11:52:02,188 - INFO - Open listings before scrape: 598
+2026-03-26 11:53:19,761 - INFO - Scraped 605 listings
+2026-03-26 11:53:20,102 - INFO - Marked 37 listings as closed
+2026-03-26 11:53:20,302 - INFO - Scrape completed: 605 found, 44 new, 37 closed
+2026-03-29 11:51:41,896 - INFO - Starting scrape run...
+2026-03-29 11:51:42,048 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-03-29 11:51:42,152 - INFO - Open listings before scrape: 587
+2026-03-29 11:52:42,173 - INFO - Scraped 607 listings
+2026-03-29 11:52:42,197 - INFO - Marked 26 listings as closed
+2026-03-29 11:52:42,578 - INFO - Scrape completed: 607 found, 46 new, 26 closed
+2026-04-01 11:51:42,141 - INFO - Starting scrape run...
+2026-04-01 11:51:42,219 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-04-01 11:51:42,360 - INFO - Open listings before scrape: 589
+2026-04-01 11:52:39,441 - INFO - Scraped 601 listings
+2026-04-01 11:52:39,457 - INFO - Marked 34 listings as closed
+2026-04-01 11:52:39,644 - INFO - Scrape completed: 601 found, 46 new, 34 closed
+2026-04-04 11:51:41,566 - INFO - Starting scrape run...
+2026-04-04 11:51:41,566 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-04-04 11:51:42,987 - INFO - Open listings before scrape: 583
+2026-04-04 11:52:38,565 - INFO - Scraped 585 listings
+2026-04-04 11:52:38,722 - INFO - Marked 46 listings as closed
+2026-04-04 11:52:38,940 - INFO - Scrape completed: 585 found, 48 new, 46 closed
+2026-04-07 11:51:41,495 - INFO - Starting scrape run...
+2026-04-07 11:51:41,495 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-04-07 11:51:41,604 - INFO - Open listings before scrape: 567
+2026-04-07 11:52:32,013 - INFO - Scraped 583 listings
+2026-04-07 11:52:32,216 - INFO - Marked 15 listings as closed
+2026-04-07 11:52:32,450 - INFO - Scrape completed: 583 found, 31 new, 15 closed
+2026-04-10 11:51:41,743 - INFO - Starting scrape run...
+2026-04-10 11:51:41,837 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-04-10 11:51:41,930 - INFO - Open listings before scrape: 564
+2026-04-10 11:52:38,767 - INFO - Scraped 573 listings
+2026-04-10 11:52:38,798 - INFO - Marked 43 listings as closed
+2026-04-10 11:52:39,111 - INFO - Scrape completed: 573 found, 51 new, 43 closed
+2026-04-13 11:51:42,157 - INFO - Starting scrape run...
+2026-04-13 11:51:42,313 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-04-13 11:51:42,423 - INFO - Open listings before scrape: 556
+2026-04-13 11:52:35,896 - INFO - Scraped 574 listings
+2026-04-13 11:52:36,178 - INFO - Marked 26 listings as closed
+2026-04-13 11:52:36,522 - INFO - Scrape completed: 574 found, 40 new, 26 closed
+2026-04-16 11:51:43,434 - INFO - Starting scrape run...
+2026-04-16 11:51:43,510 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-04-16 11:51:43,639 - INFO - Open listings before scrape: 551
+2026-04-16 11:52:41,613 - INFO - Scraped 573 listings
+2026-04-16 11:52:41,934 - INFO - Marked 23 listings as closed
+2026-04-16 11:52:42,209 - INFO - Scrape completed: 573 found, 45 new, 23 closed
+2026-04-19 11:51:41,776 - INFO - Starting scrape run...
+2026-04-19 11:51:41,848 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-04-19 11:51:41,980 - INFO - Open listings before scrape: 554
+2026-04-19 16:34:11,773 - INFO - Starting scrape run [sale]...
+2026-04-19 16:34:11,773 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-04-19 16:34:11,916 - INFO - Open listings before scrape [sale]: 554
+2026-04-19 16:35:45,533 - INFO - Starting scrape run [sale]...
+2026-04-19 16:35:45,533 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote?sfId=73a1d6cf-a4b9-40ea-a7c3-a05102a02348&isNavigation=true&areaId=117224&areaId=117225&areaId=117226&areaId=117227&areaId=117228&areaId=117229&areaId=117230&areaId=117231&areaId=117242&NO_OF_ROOMS_BUCKET=3X3&PRICE_TO=550000&ESTATE_SIZE/LIVING_AREA_FROM=60
+2026-04-19 16:35:45,694 - INFO - Open listings before scrape [sale]: 554
+2026-04-19 16:36:31,275 - INFO - Scraped 565 listings [sale]
+2026-04-19 16:36:31,312 - INFO - Marked 23 listings as closed [sale]
+2026-04-19 16:36:31,645 - INFO - Scrape completed [sale]: 565 found, 34 new, 23 closed
+2026-04-19 16:36:31,645 - INFO - Starting scrape run [rent]...
+2026-04-19 16:36:31,645 - INFO - Scraping URL: https://www.willhaben.at/iad/immobilien/mietwohnungen/wien
+2026-04-19 16:36:31,764 - INFO - Open listings before scrape [rent]: 0
+2026-04-19 16:42:27,874 - INFO - Scraped 4728 listings [rent]
+2026-04-19 16:42:28,377 - INFO - Scrape completed [rent]: 4728 found, 4728 new, 0 closed

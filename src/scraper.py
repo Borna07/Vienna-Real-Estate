@@ -52,15 +52,52 @@ def attributes_to_dict(attributes: Dict[str, object]) -> Dict[str, str]:
 
 
 def parse_price_value(price_str: str) -> Optional[int]:
-    """Extract numeric price value from display string like '€ 448.400'."""
+    """
+    Parse Willhaben price strings to whole EUR.
+
+    Handles Austrian formatting: sale totals like '€ 448.400' (thousand dots),
+    and rents like '€ 1.610,43' (comma decimals) or '€ 1.695'.
+    """
     if not price_str:
         return None
-    # Remove currency symbol and whitespace, handle European formatting
-    cleaned = price_str.replace("€", "").replace(" ", "").replace(".", "").replace(",", "")
-    try:
-        return int(cleaned)
-    except ValueError:
+    s = price_str.replace("€", "").strip()
+    low = s.lower()
+    for suf in ("/monat", "/ month", "pro monat", "p.m.", "p. m."):
+        if suf in low:
+            s = s[: low.index(suf)].strip()
+            low = s.lower()
+            break
+    s = s.replace(" ", "")
+    if not s:
         return None
+
+    # Comma as decimal separator (e.g. 1.610,43)
+    if "," in s:
+        left, right = s.rsplit(",", 1)
+        left = left.replace(".", "")
+        right = right.strip()
+        if right.isdigit() and len(right) <= 2:
+            try:
+                return int(round(float(f"{left}.{right}")))
+            except ValueError:
+                return None
+        digits = "".join(c for c in s if c.isdigit())
+        return int(digits) if digits else None
+
+    # Dots: thousands (448.400) or decimal (12.5)
+    if "." in s:
+        parts = s.split(".")
+        if all(p.isdigit() for p in parts) and len(parts[-1]) == 3:
+            return int("".join(parts))
+        try:
+            return int(round(float(s.replace(",", "."))))
+        except ValueError:
+            pass
+        digits = "".join(c for c in s if c.isdigit())
+        return int(digits) if digits else None
+
+    digits = "".join(c for c in s if c.isdigit())
+    return int(digits) if digits else None
 
 
 def parse_size_value(size_str: str) -> Optional[float]:

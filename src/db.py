@@ -3,10 +3,12 @@
 import sqlite3
 from contextlib import contextmanager
 from datetime import datetime
-from pathlib import Path
-from typing import Generator, List, Optional, Tuple
+from typing import Generator, List, Optional
 
 from .config import get_database_path
+
+MARKET_SALE = "sale"
+MARKET_RENT = "rent"
 
 
 SCHEMA = """
@@ -15,7 +17,8 @@ CREATE TABLE IF NOT EXISTS listings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     ad_id TEXT UNIQUE NOT NULL,
     url TEXT NOT NULL,
-    first_seen_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    first_seen_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    market TEXT NOT NULL DEFAULT 'sale' CHECK(market IN ('sale', 'rent'))
 );
 
 -- Snapshots table: point-in-time data for each listing
@@ -49,7 +52,8 @@ CREATE TABLE IF NOT EXISTS scrape_runs (
     listings_found INTEGER,
     new_listings INTEGER,
     closed_listings INTEGER,
-    status TEXT DEFAULT 'running'
+    status TEXT DEFAULT 'running',
+    market TEXT NOT NULL DEFAULT 'sale' CHECK(market IN ('sale', 'rent'))
 );
 
 -- Indexes for performance
@@ -57,6 +61,25 @@ CREATE INDEX IF NOT EXISTS idx_snapshots_listing_id ON snapshots(listing_id);
 CREATE INDEX IF NOT EXISTS idx_snapshots_scraped_at ON snapshots(scraped_at);
 CREATE INDEX IF NOT EXISTS idx_listing_status_status ON listing_status(status);
 """
+
+
+def _table_columns(conn: sqlite3.Connection, table: str) -> List[str]:
+    cur = conn.execute(f"PRAGMA table_info({table})")
+    return [row[1] for row in cur.fetchall()]
+
+
+def _migrate_schema(conn: sqlite3.Connection) -> None:
+    """Add market columns to existing databases created before multi-market support."""
+    cols = _table_columns(conn, "listings")
+    if cols and "market" not in cols:
+        conn.execute(
+            "ALTER TABLE listings ADD COLUMN market TEXT NOT NULL DEFAULT 'sale'"
+        )
+    cols_r = _table_columns(conn, "scrape_runs")
+    if cols_r and "market" not in cols_r:
+        conn.execute(
+            "ALTER TABLE scrape_runs ADD COLUMN market TEXT NOT NULL DEFAULT 'sale'"
+        )
 
 
 @contextmanager
@@ -75,31 +98,40 @@ def init_db() -> None:
     """Initialize the database schema."""
     with get_connection() as conn:
         conn.executescript(SCHEMA)
+        _migrate_schema(conn)
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_listings_market ON listings(market)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_scrape_runs_market ON scrape_runs(market)"
+        )
         conn.commit()
 
 
-def get_or_create_listing(conn: sqlite3.Connection, ad_id: str, url: str) -> int:
+def get_or_create_listing(
+    conn: sqlite3.Connection, ad_id: str, url: str, market: str = MARKET_SALE
+) -> int:
     """Get existing listing ID or create new one. Returns listing_id."""
     cursor = conn.execute(
-        "SELECT id FROM listings WHERE ad_id = ?", (ad_id,)
+        "SELECT id FROM listings WHERE ad_id = ? AND market = ?",
+        (ad_id, market),
     )
     row = cursor.fetchone()
-    
+
     if row:
         return row["id"]
-    
+
     cursor = conn.execute(
-        "INSERT INTO listings (ad_id, url, first_seen_at) VALUES (?, ?, ?)",
-        (ad_id, url, datetime.utcnow())
+        "INSERT INTO listings (ad_id, url, first_seen_at, market) VALUES (?, ?, ?, ?)",
+        (ad_id, url, datetime.utcnow(), market),
     )
     listing_id = cursor.lastrowid
-    
-    # Initialize status as open
+
     conn.execute(
         "INSERT INTO listing_status (listing_id, status) VALUES (?, 'open')",
-        (listing_id,)
+        (listing_id,),
     )
-    
+
     return listing_id
 
 
@@ -119,55 +151,68 @@ def insert_snapshot(
     """Insert a new snapshot for a listing."""
     conn.execute(
         """
-        INSERT INTO snapshots 
+        INSERT OR IGNORE INTO snapshots 
         (listing_id, scraped_at, title, price, price_value, location, rooms, size_sqm, size_sqm_value, price_per_sqm)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
-        (listing_id, scraped_at, title, price, price_value, location, rooms, size_sqm, size_sqm_value, price_per_sqm)
+        (
+            listing_id,
+            scraped_at,
+            title,
+            price,
+            price_value,
+            location,
+            rooms,
+            size_sqm,
+            size_sqm_value,
+            price_per_sqm,
+        ),
     )
 
 
-def get_open_listing_ad_ids(conn: sqlite3.Connection) -> List[str]:
-    """Get all ad_ids of currently open listings."""
+def get_open_listing_ad_ids(conn: sqlite3.Connection, market: str = MARKET_SALE) -> List[str]:
+    """Get all ad_ids of currently open listings for a market segment."""
     cursor = conn.execute(
         """
         SELECT l.ad_id 
         FROM listings l
         JOIN listing_status ls ON l.id = ls.listing_id
-        WHERE ls.status = 'open'
-        """
+        WHERE ls.status = 'open' AND l.market = ?
+        """,
+        (market,),
     )
     return [row["ad_id"] for row in cursor.fetchall()]
 
 
 def mark_listings_closed(
-    conn: sqlite3.Connection, 
-    ad_ids: List[str], 
-    closed_at: datetime
+    conn: sqlite3.Connection,
+    ad_ids: List[str],
+    closed_at: datetime,
+    market: str = MARKET_SALE,
 ) -> int:
-    """Mark listings as closed. Returns count of closed listings."""
+    """Mark listings as closed within a market. Returns count of closed listings."""
     if not ad_ids:
         return 0
-    
+
     placeholders = ",".join("?" * len(ad_ids))
     cursor = conn.execute(
         f"""
         UPDATE listing_status
         SET status = 'closed', closed_at = ?
         WHERE listing_id IN (
-            SELECT id FROM listings WHERE ad_id IN ({placeholders})
+            SELECT id FROM listings WHERE ad_id IN ({placeholders}) AND market = ?
         )
         """,
-        [closed_at] + ad_ids
+        [closed_at] + ad_ids + [market],
     )
     return cursor.rowcount
 
 
-def start_scrape_run(conn: sqlite3.Connection) -> int:
+def start_scrape_run(conn: sqlite3.Connection, market: str = MARKET_SALE) -> int:
     """Start a new scrape run. Returns run_id."""
     cursor = conn.execute(
-        "INSERT INTO scrape_runs (started_at, status) VALUES (?, 'running')",
-        (datetime.utcnow(),)
+        "INSERT INTO scrape_runs (started_at, status, market) VALUES (?, 'running', ?)",
+        (datetime.utcnow(), market),
     )
     return cursor.lastrowid
 
@@ -187,7 +232,7 @@ def complete_scrape_run(
             closed_listings = ?, status = 'completed'
         WHERE id = ?
         """,
-        (datetime.utcnow(), listings_found, new_listings, closed_listings, run_id)
+        (datetime.utcnow(), listings_found, new_listings, closed_listings, run_id),
     )
 
 
@@ -199,105 +244,115 @@ def fail_scrape_run(conn: sqlite3.Connection, run_id: int, error: str) -> None:
         SET completed_at = ?, status = ?
         WHERE id = ?
         """,
-        (datetime.utcnow(), f"failed: {error[:200]}", run_id)
+        (datetime.utcnow(), f"failed: {error[:200]}", run_id),
     )
 
 
 # Query helpers for dashboard
 
-def get_listing_count_by_status(conn: sqlite3.Connection) -> dict:
-    """Get count of open vs closed listings."""
+def get_listing_count_by_status(conn: sqlite3.Connection, market: str = MARKET_SALE) -> dict:
+    """Get count of open vs closed listings for a market."""
     cursor = conn.execute(
         """
-        SELECT status, COUNT(*) as count 
-        FROM listing_status 
-        GROUP BY status
-        """
+        SELECT ls.status, COUNT(*) as count 
+        FROM listing_status ls
+        JOIN listings l ON l.id = ls.listing_id
+        WHERE l.market = ?
+        GROUP BY ls.status
+        """,
+        (market,),
     )
     return {row["status"]: row["count"] for row in cursor.fetchall()}
 
 
-def get_price_stats_over_time(conn: sqlite3.Connection) -> List[dict]:
+def get_price_stats_over_time(conn: sqlite3.Connection, market: str = MARKET_SALE) -> List[dict]:
     """Get average price statistics by scrape date."""
     cursor = conn.execute(
         """
         SELECT 
-            DATE(scraped_at) as date,
-            AVG(price_value) as avg_price,
-            MIN(price_value) as min_price,
-            MAX(price_value) as max_price,
+            DATE(s.scraped_at) as date,
+            AVG(s.price_value) as avg_price,
+            MIN(s.price_value) as min_price,
+            MAX(s.price_value) as max_price,
             COUNT(*) as count
-        FROM snapshots
-        WHERE price_value IS NOT NULL
-        GROUP BY DATE(scraped_at)
+        FROM snapshots s
+        JOIN listings l ON s.listing_id = l.id AND l.market = ?
+        WHERE s.price_value IS NOT NULL
+        GROUP BY DATE(s.scraped_at)
         ORDER BY date
-        """
+        """,
+        (market,),
     )
     return [dict(row) for row in cursor.fetchall()]
 
 
-def get_price_by_district(conn: sqlite3.Connection) -> List[dict]:
+def get_price_by_district(conn: sqlite3.Connection, market: str = MARKET_SALE) -> List[dict]:
     """Get price statistics by district/location."""
     cursor = conn.execute(
         """
         SELECT 
-            location,
-            AVG(price_value) as avg_price,
+            s.location,
+            AVG(s.price_value) as avg_price,
             COUNT(*) as count
         FROM snapshots s
+        JOIN listings l ON s.listing_id = l.id AND l.market = ?
         JOIN (
             SELECT listing_id, MAX(scraped_at) as max_scraped
             FROM snapshots
             GROUP BY listing_id
         ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
-        WHERE price_value IS NOT NULL
-        GROUP BY location
+        WHERE s.price_value IS NOT NULL
+        GROUP BY s.location
         ORDER BY avg_price DESC
-        """
+        """,
+        (market,),
     )
     return [dict(row) for row in cursor.fetchall()]
 
 
-def get_price_per_sqm_by_district(conn: sqlite3.Connection) -> List[dict]:
+def get_price_per_sqm_by_district(conn: sqlite3.Connection, market: str = MARKET_SALE) -> List[dict]:
     """Get average price per sqm by district/location."""
     cursor = conn.execute(
         """
         SELECT 
-            location,
-            AVG(price_per_sqm) as avg_price_per_sqm,
+            s.location,
+            AVG(s.price_per_sqm) as avg_price_per_sqm,
             COUNT(*) as count
         FROM snapshots s
+        JOIN listings l ON s.listing_id = l.id AND l.market = ?
         JOIN (
             SELECT listing_id, MAX(scraped_at) as max_scraped
             FROM snapshots
             GROUP BY listing_id
         ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
-        WHERE price_per_sqm IS NOT NULL
-        GROUP BY location
+        WHERE s.price_per_sqm IS NOT NULL
+        GROUP BY s.location
         ORDER BY avg_price_per_sqm DESC
-        """
+        """,
+        (market,),
     )
     return [dict(row) for row in cursor.fetchall()]
 
 
-def get_overall_price_stats(conn: sqlite3.Connection) -> dict:
+def get_overall_price_stats(conn: sqlite3.Connection, market: str = MARKET_SALE) -> dict:
     """Get overall price statistics: median, average, avg price per sqm."""
-    # Get all prices for median calculation
     cursor = conn.execute(
         """
-        SELECT price_value, price_per_sqm
+        SELECT s.price_value, s.price_per_sqm
         FROM snapshots s
+        JOIN listings l ON s.listing_id = l.id AND l.market = ?
         JOIN (
             SELECT listing_id, MAX(scraped_at) as max_scraped
             FROM snapshots
             GROUP BY listing_id
         ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
-        WHERE price_value IS NOT NULL
-        ORDER BY price_value
-        """
+        WHERE s.price_value IS NOT NULL
+        ORDER BY s.price_value
+        """,
+        (market,),
     )
     rows = cursor.fetchall()
-    
+
     if not rows:
         return {
             "median_price": 0,
@@ -305,21 +360,21 @@ def get_overall_price_stats(conn: sqlite3.Connection) -> dict:
             "avg_price_per_sqm": 0,
             "count": 0,
         }
-    
+
     prices = [row["price_value"] for row in rows]
     price_per_sqms = [row["price_per_sqm"] for row in rows if row["price_per_sqm"]]
-    
-    # Calculate median
+
     n = len(prices)
     if n % 2 == 0:
-        median = (prices[n//2 - 1] + prices[n//2]) / 2
+        median = (prices[n // 2 - 1] + prices[n // 2]) / 2
     else:
-        median = prices[n//2]
-    
-    # Calculate averages
+        median = prices[n // 2]
+
     avg_price = sum(prices) / len(prices)
-    avg_price_per_sqm = sum(price_per_sqms) / len(price_per_sqms) if price_per_sqms else 0
-    
+    avg_price_per_sqm = (
+        sum(price_per_sqms) / len(price_per_sqms) if price_per_sqms else 0
+    )
+
     return {
         "median_price": round(median),
         "avg_price": round(avg_price),
@@ -328,7 +383,9 @@ def get_overall_price_stats(conn: sqlite3.Connection) -> dict:
     }
 
 
-def get_all_listings_with_latest_snapshot(conn: sqlite3.Connection) -> List[dict]:
+def get_all_listings_with_latest_snapshot(
+    conn: sqlite3.Connection, market: str = MARKET_SALE
+) -> List[dict]:
     """Get all listings with their most recent snapshot data."""
     cursor = conn.execute(
         """
@@ -337,6 +394,7 @@ def get_all_listings_with_latest_snapshot(conn: sqlite3.Connection) -> List[dict
             l.ad_id,
             l.url,
             l.first_seen_at,
+            l.market,
             ls.status,
             ls.closed_at,
             s.title,
@@ -350,80 +408,92 @@ def get_all_listings_with_latest_snapshot(conn: sqlite3.Connection) -> List[dict
             s.scraped_at
         FROM listings l
         JOIN listing_status ls ON l.id = ls.listing_id
-        LEFT JOIN snapshots s ON l.id = s.listing_id
-        LEFT JOIN (
+        JOIN (
             SELECT listing_id, MAX(scraped_at) as max_scraped
             FROM snapshots
             GROUP BY listing_id
-        ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
-        WHERE s.id IS NOT NULL OR latest.listing_id IS NULL
-        ORDER BY s.scraped_at DESC NULLS LAST
-        """
+        ) latest ON l.id = latest.listing_id
+        JOIN snapshots s ON s.listing_id = l.id AND s.scraped_at = latest.max_scraped
+        WHERE l.market = ?
+        ORDER BY s.scraped_at DESC
+        """,
+        (market,),
     )
     return [dict(row) for row in cursor.fetchall()]
 
 
-def get_recent_scrape_runs(conn: sqlite3.Connection, limit: int = 10) -> List[dict]:
-    """Get recent scrape runs."""
+def get_recent_scrape_runs(
+    conn: sqlite3.Connection, limit: int = 10, market: str = MARKET_SALE
+) -> List[dict]:
+    """Get recent scrape runs for a market."""
     cursor = conn.execute(
         """
         SELECT * FROM scrape_runs 
+        WHERE market = ?
         ORDER BY started_at DESC 
         LIMIT ?
         """,
-        (limit,)
+        (market, limit),
     )
     return [dict(row) for row in cursor.fetchall()]
 
 
-def get_price_distribution(conn: sqlite3.Connection, bucket_size: int = 50000) -> List[dict]:
+def get_price_distribution(
+    conn: sqlite3.Connection, bucket_size: int = 50000, market: str = MARKET_SALE
+) -> List[dict]:
     """Get price distribution histogram data with configurable bucket size."""
     cursor = conn.execute(
         """
         SELECT 
-            (price_value / ?) * ? as bucket_start,
-            ((price_value / ?) + 1) * ? as bucket_end,
+            (s.price_value / ?) * ? as bucket_start,
+            ((s.price_value / ?) + 1) * ? as bucket_end,
             COUNT(*) as count,
-            location
+            s.location
         FROM snapshots s
+        JOIN listings l ON s.listing_id = l.id AND l.market = ?
         JOIN (
             SELECT listing_id, MAX(scraped_at) as max_scraped
             FROM snapshots
             GROUP BY listing_id
         ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
-        WHERE price_value IS NOT NULL
-        GROUP BY bucket_start, location
+        WHERE s.price_value IS NOT NULL
+        GROUP BY bucket_start, s.location
         ORDER BY bucket_start
         """,
-        (bucket_size, bucket_size, bucket_size, bucket_size)
+        (bucket_size, bucket_size, bucket_size, bucket_size, market),
     )
     return [dict(row) for row in cursor.fetchall()]
 
 
-def get_price_distribution_simple(conn: sqlite3.Connection, bucket_size: int = 50000) -> List[dict]:
+def get_price_distribution_simple(
+    conn: sqlite3.Connection, bucket_size: int = 50000, market: str = MARKET_SALE
+) -> List[dict]:
     """Get simple price distribution histogram without district breakdown."""
     cursor = conn.execute(
         """
         SELECT 
-            (price_value / ?) * ? as bucket_start,
-            ((price_value / ?) + 1) * ? as bucket_end,
+            (s.price_value / ?) * ? as bucket_start,
+            ((s.price_value / ?) + 1) * ? as bucket_end,
             COUNT(*) as count
         FROM snapshots s
+        JOIN listings l ON s.listing_id = l.id AND l.market = ?
         JOIN (
             SELECT listing_id, MAX(scraped_at) as max_scraped
             FROM snapshots
             GROUP BY listing_id
         ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
-        WHERE price_value IS NOT NULL
+        WHERE s.price_value IS NOT NULL
         GROUP BY bucket_start
         ORDER BY bucket_start
         """,
-        (bucket_size, bucket_size, bucket_size, bucket_size)
+        (bucket_size, bucket_size, bucket_size, bucket_size, market),
     )
     return [dict(row) for row in cursor.fetchall()]
 
 
-def get_best_value_listings(conn: sqlite3.Connection, limit: int = 10) -> List[dict]:
+def get_best_value_listings(
+    conn: sqlite3.Connection, limit: int = 10, market: str = MARKET_SALE
+) -> List[dict]:
     """Get listings with lowest price per sqm (best value)."""
     cursor = conn.execute(
         """
@@ -447,18 +517,19 @@ def get_best_value_listings(conn: sqlite3.Connection, limit: int = 10) -> List[d
             FROM snapshots
             GROUP BY listing_id
         ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
-        WHERE s.price_per_sqm IS NOT NULL 
+        WHERE l.market = ?
+          AND s.price_per_sqm IS NOT NULL 
           AND s.price_per_sqm > 0
           AND ls.status = 'open'
         ORDER BY s.price_per_sqm ASC
         LIMIT ?
         """,
-        (limit,)
+        (market, limit),
     )
     return [dict(row) for row in cursor.fetchall()]
 
 
-def get_best_value_by_district(conn: sqlite3.Connection) -> List[dict]:
+def get_best_value_by_district(conn: sqlite3.Connection, market: str = MARKET_SALE) -> List[dict]:
     """Get the best value listing (lowest €/m²) for each district."""
     cursor = conn.execute(
         """
@@ -484,31 +555,33 @@ def get_best_value_by_district(conn: sqlite3.Connection) -> List[dict]:
                 FROM snapshots
                 GROUP BY listing_id
             ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
-            WHERE s.price_per_sqm IS NOT NULL 
+            WHERE l.market = ?
+              AND s.price_per_sqm IS NOT NULL 
               AND s.price_per_sqm > 0
               AND ls.status = 'open'
         )
         SELECT * FROM ranked WHERE rn = 1
         ORDER BY price_per_sqm ASC
-        """
+        """,
+        (market,),
     )
     return [dict(row) for row in cursor.fetchall()]
 
 
-def get_market_trends(conn: sqlite3.Connection) -> dict:
-    """Get market trends comparing recent scrapes."""
-    # Get stats from last two completed scrape runs
+def get_market_trends(conn: sqlite3.Connection, market: str = MARKET_SALE) -> dict:
+    """Get market trends comparing recent scrapes for one market."""
     cursor = conn.execute(
         """
         SELECT id, started_at, listings_found
         FROM scrape_runs 
-        WHERE status = 'completed'
+        WHERE status = 'completed' AND market = ?
         ORDER BY started_at DESC 
         LIMIT 2
-        """
+        """,
+        (market,),
     )
     runs = cursor.fetchall()
-    
+
     if len(runs) < 1:
         return {
             "current_avg_price": 0,
@@ -521,48 +594,48 @@ def get_market_trends(conn: sqlite3.Connection) -> dict:
             "previous_count": 0,
             "count_change": 0,
         }
-    
-    # Get current averages (latest snapshot per listing)
+
     cursor = conn.execute(
         """
         SELECT 
-            AVG(price_value) as avg_price,
-            AVG(price_per_sqm) as avg_ppsqm,
+            AVG(s.price_value) as avg_price,
+            AVG(s.price_per_sqm) as avg_ppsqm,
             COUNT(*) as count
         FROM snapshots s
+        JOIN listings l ON s.listing_id = l.id AND l.market = ?
         JOIN (
             SELECT listing_id, MAX(scraped_at) as max_scraped
             FROM snapshots
             GROUP BY listing_id
         ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
-        WHERE price_value IS NOT NULL
-        """
+        WHERE s.price_value IS NOT NULL
+        """,
+        (market,),
     )
     current = cursor.fetchone()
-    
+
     current_avg_price = current["avg_price"] or 0
     current_avg_ppsqm = current["avg_ppsqm"] or 0
     current_count = current["count"] or 0
-    
-    # If we have a previous run, get those stats
+
     previous_avg_price = current_avg_price
     previous_avg_ppsqm = current_avg_ppsqm
     previous_count = current_count
-    
+
     if len(runs) >= 2:
-        # Get stats from before the latest scrape
         prev_run_time = runs[1]["started_at"]
         cursor = conn.execute(
             """
             SELECT 
-                AVG(price_value) as avg_price,
-                AVG(price_per_sqm) as avg_ppsqm,
+                AVG(s.price_value) as avg_price,
+                AVG(s.price_per_sqm) as avg_ppsqm,
                 COUNT(*) as count
-            FROM snapshots
-            WHERE scraped_at < ? AND price_value IS NOT NULL
-            GROUP BY listing_id
+            FROM snapshots s
+            JOIN listings l ON s.listing_id = l.id AND l.market = ?
+            WHERE s.scraped_at < ? AND s.price_value IS NOT NULL
+            GROUP BY s.listing_id
             """,
-            (prev_run_time,)
+            (market, prev_run_time),
         )
         prev_rows = cursor.fetchall()
         if prev_rows:
@@ -573,16 +646,19 @@ def get_market_trends(conn: sqlite3.Connection) -> dict:
             if ppsqms:
                 previous_avg_ppsqm = sum(ppsqms) / len(ppsqms)
             previous_count = len(prev_rows)
-    
-    # Calculate changes
+
     price_change_pct = 0
     if previous_avg_price > 0:
-        price_change_pct = ((current_avg_price - previous_avg_price) / previous_avg_price) * 100
-    
+        price_change_pct = (
+            (current_avg_price - previous_avg_price) / previous_avg_price
+        ) * 100
+
     ppsqm_change_pct = 0
     if previous_avg_ppsqm > 0:
-        ppsqm_change_pct = ((current_avg_ppsqm - previous_avg_ppsqm) / previous_avg_ppsqm) * 100
-    
+        ppsqm_change_pct = (
+            (current_avg_ppsqm - previous_avg_ppsqm) / previous_avg_ppsqm
+        ) * 100
+
     return {
         "current_avg_price": round(current_avg_price),
         "previous_avg_price": round(previous_avg_price),
@@ -613,7 +689,7 @@ def get_listing_price_history(conn: sqlite3.Connection, listing_id: int) -> List
         WHERE listing_id = ?
         ORDER BY scraped_at ASC
         """,
-        (listing_id,)
+        (listing_id,),
     )
     return [dict(row) for row in cursor.fetchall()]
 
@@ -627,6 +703,7 @@ def get_listing_details(conn: sqlite3.Connection, listing_id: int) -> Optional[d
             l.ad_id,
             l.url,
             l.first_seen_at,
+            l.market,
             ls.status,
             ls.closed_at,
             s.title,
@@ -648,7 +725,7 @@ def get_listing_details(conn: sqlite3.Connection, listing_id: int) -> Optional[d
         ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
         WHERE l.id = ?
         """,
-        (listing_id,)
+        (listing_id,),
     )
     row = cursor.fetchone()
     return dict(row) if row else None

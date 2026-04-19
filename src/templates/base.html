@@ -107,9 +107,11 @@
                 </div>
                 <span class="text-xl font-semibold">Vienna Tracker</span>
             </div>
-            <div class="flex gap-6">
-                <a href="/" class="nav-link {% if request.url.path == '/' %}active{% endif %}">Dashboard</a>
+            <div class="flex gap-6 flex-wrap">
+                <a href="/" class="nav-link {% if request.url.path == '/' %}active{% endif %}">Buy</a>
                 <a href="/listings" class="nav-link {% if request.url.path == '/listings' %}active{% endif %}">Listings</a>
+                <a href="/rent" class="nav-link {% if request.url.path.startswith('/rent') %}active{% endif %}">Rentals</a>
+                <a href="/rent/listings" class="nav-link {% if request.url.path == '/rent/listings' %}active{% endif %}">Rent listings</a>
             </div>
         </div>
     </nav>

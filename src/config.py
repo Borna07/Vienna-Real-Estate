@@ -25,11 +25,17 @@ def get_database_path() -> Path:
 
 
 def get_scrape_url() -> str:
-    """Get the Willhaben search URL to scrape."""
+    """Get the Willhaben search URL to scrape (sale / Eigentum)."""
     return os.getenv(
         "SCRAPE_URL",
-        "https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote"
+        "https://www.willhaben.at/iad/immobilien/eigentumswohnung/eigentumswohnung-angebote",
     )
+
+
+def get_scrape_url_rent() -> str:
+    """Willhaben search URL for Mietwohnungen; empty if unset (rent scrape skipped)."""
+    val = os.getenv("SCRAPE_URL_RENT")
+    return val.strip() if val else ""
 
 
 def get_scrape_interval_days() -> int:
