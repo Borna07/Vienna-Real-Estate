@@ -21,6 +21,7 @@ from .db import (
     get_price_stats_over_time,
     get_price_by_district,
     get_price_per_sqm_by_district,
+    get_listing_count_by_district,
     get_overall_price_stats,
     get_all_listings_with_latest_snapshot,
     get_recent_scrape_runs,
@@ -67,6 +68,7 @@ async def dashboard(request: Request):
         price_over_time = get_price_stats_over_time(conn, market)
         price_by_district = get_price_by_district(conn, market)
         price_per_sqm_by_district = get_price_per_sqm_by_district(conn, market)
+        listing_count_by_district = get_listing_count_by_district(conn, market)
         price_stats = get_overall_price_stats(conn, market)
         recent_runs = get_recent_scrape_runs(conn, limit=5, market=market)
         price_distribution = get_price_distribution_simple(
@@ -87,6 +89,9 @@ async def dashboard(request: Request):
             "price_by_district_json": json.dumps(price_by_district, default=str),
             "price_per_sqm_by_district_json": json.dumps(
                 price_per_sqm_by_district, default=str
+            ),
+            "listing_count_by_district_json": json.dumps(
+                listing_count_by_district, default=str
             ),
             "price_distribution_json": json.dumps(price_distribution, default=str),
             "recent_runs": recent_runs,
@@ -112,6 +117,7 @@ async def dashboard_rent(request: Request):
         price_over_time = get_price_stats_over_time(conn, market)
         price_by_district = get_price_by_district(conn, market)
         price_per_sqm_by_district = get_price_per_sqm_by_district(conn, market)
+        listing_count_by_district = get_listing_count_by_district(conn, market)
         price_stats = get_overall_price_stats(conn, market)
         recent_runs = get_recent_scrape_runs(conn, limit=5, market=market)
         price_distribution = get_price_distribution_simple(
@@ -132,6 +138,9 @@ async def dashboard_rent(request: Request):
             "price_by_district_json": json.dumps(price_by_district, default=str),
             "price_per_sqm_by_district_json": json.dumps(
                 price_per_sqm_by_district, default=str
+            ),
+            "listing_count_by_district_json": json.dumps(
+                listing_count_by_district, default=str
             ),
             "price_distribution_json": json.dumps(price_distribution, default=str),
             "recent_runs": recent_runs,
@@ -193,6 +202,7 @@ async def api_stats(market: MarketQuery = Query(default="sale")):
             "status_counts": get_listing_count_by_status(conn, m),
             "price_over_time": get_price_stats_over_time(conn, m),
             "price_by_district": get_price_by_district(conn, m),
+            "listing_count_by_district": get_listing_count_by_district(conn, m),
             "recent_runs": get_recent_scrape_runs(conn, limit=10, market=m),
         }
 

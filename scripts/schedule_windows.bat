@@ -2,8 +2,12 @@
 setlocal EnableExtensions
 REM Windows Task Scheduler batch script for Vienna Apartment Price Tracker
 REM Schedule this script to run every 3 days via Task Scheduler
+REM Optional arg %1: sale | rent | all (default all if omitted). Pass via Task Scheduler "Add arguments".
 
 cd /d "%~dp0.." || exit /b 1
+
+set "SCRAPE_MARKET=%~1"
+if "%SCRAPE_MARKET%"=="" set "SCRAPE_MARKET=all"
 
 for /f "delims=" %%i in ('powershell -NoProfile -Command "Get-Date -Format 'yyyy-MM-dd'"') do set "RUN_DATE=%%i"
 for /f "delims=" %%i in ('powershell -NoProfile -Command "Get-Date -Format 'yyyy-MM-dd HH:mm:ss'"') do set "RUN_TS=%%i"
@@ -13,6 +17,7 @@ if not exist "%LOG_DIR%" mkdir "%LOG_DIR%"
 set "LOG_FILE=%LOG_DIR%\schedule_%RUN_DATE%.log"
 
 call :log "Starting scheduled scrape"
+call :log "Market: %SCRAPE_MARKET%"
 call :log "Working dir: %CD%"
 
 REM Activate virtual environment if present
@@ -24,7 +29,7 @@ if exist "myenv\Scripts\activate.bat" (
 )
 
 REM Run scraper
-python -m scripts.scrape >> "%LOG_FILE%" 2>&1
+python -m scripts.scrape --market %SCRAPE_MARKET% >> "%LOG_FILE%" 2>&1
 if %ERRORLEVEL% NEQ 0 (
     call :log "Scrape failed with error code %ERRORLEVEL%"
     exit /b %ERRORLEVEL%

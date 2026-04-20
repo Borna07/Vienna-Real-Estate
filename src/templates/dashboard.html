@@ -84,18 +84,25 @@
         </div>
     </div>
 
-    <!-- Charts Row 1 -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Charts row: full-width cards stacked (district labels need horizontal space) -->
+    <div class="flex flex-col gap-6 w-full">
         <!-- Price Distribution Histogram -->
-        <div class="card p-6">
+        <div class="card p-6 w-full">
             <h2 class="text-lg font-semibold mb-4">{% if is_rent %}Rent distribution (€/month){% else %}Price distribution{% endif %}</h2>
-            <div id="histogram-chart" style="height: 300px;"></div>
+            <div id="histogram-chart" class="w-full" style="height: 320px;"></div>
         </div>
-        
+
         <!-- Price per sqm by District -->
-        <div class="card p-6">
+        <div class="card p-6 w-full">
             <h2 class="text-lg font-semibold mb-4">{% if is_rent %}Average €/m² per month by district{% else %}Average €/m² by district{% endif %}</h2>
-            <div id="price-sqm-district-chart" style="height: 300px;"></div>
+            <div id="price-sqm-district-chart" class="w-full min-h-[380px]" style="height: 420px;"></div>
+        </div>
+
+        <!-- Listing count by district -->
+        <div class="card p-6 w-full">
+            <h2 class="text-lg font-semibold mb-4">{% if is_rent %}Rental listings per district{% else %}Listings per district{% endif %}</h2>
+            <p class="text-zinc-500 text-sm mb-3">Based on each listing’s latest snapshot location.</p>
+            <div id="listings-count-district-chart" class="w-full min-h-[380px]" style="height: 420px;"></div>
         </div>
     </div>
 
@@ -215,12 +222,21 @@
 {% block scripts %}
 <script>
     const isRent = {{ is_rent | tojson }};
-    const priceOverTime = {{ price_over_time_json | safe }};
-    const pricePerSqmByDistrict = {{ price_per_sqm_by_district_json | safe }};
-    const priceDistribution = {{ price_distribution_json | safe }};
+    const priceOverTime = {{ price_over_time_json|default('[]', true) | safe }};
+    const pricePerSqmByDistrict = {{ price_per_sqm_by_district_json|default('[]', true) | safe }};
+    const listingCountByDistrict = {{ listing_count_by_district_json|default('[]', true) | safe }};
+    const priceDistribution = {{ price_distribution_json|default('[]', true) | safe }};
+
+    if (typeof Plotly === 'undefined') {
+        const msg = '<div class="text-rose-400 text-sm p-4">Charts could not load (Plotly script missing or blocked). Check the browser console and network.</div>';
+        ['histogram-chart', 'price-chart', 'price-sqm-district-chart', 'listings-count-district-chart'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = msg;
+        });
+    }
 
     // Price Distribution Histogram
-    if (priceDistribution.length > 0) {
+    if (typeof Plotly !== 'undefined' && Array.isArray(priceDistribution) && priceDistribution.length > 0) {
         const histTrace = {
             x: priceDistribution.map(d => isRent
                 ? `€${d.bucket_start}-€${d.bucket_end}/mo`
@@ -253,12 +269,12 @@
                 title: { text: 'Number of Listings', standoff: 10 }
             }
         }, { responsive: true });
-    } else {
+    } else if (typeof Plotly !== 'undefined') {
         document.getElementById('histogram-chart').innerHTML = '<div class="text-zinc-500 text-center py-12">No data yet.</div>';
     }
 
     // Price over time chart
-    if (priceOverTime.length > 0) {
+    if (typeof Plotly !== 'undefined' && Array.isArray(priceOverTime) && priceOverTime.length > 0) {
         const priceTrace = {
             x: priceOverTime.map(d => d.date),
             y: priceOverTime.map(d => d.avg_price),
@@ -271,59 +287,114 @@
             fillcolor: 'rgba(45, 212, 191, 0.1)'
         };
 
+        const priceYaxis = {
+            gridcolor: '#27272a',
+            linecolor: '#27272a',
+            tickprefix: '€',
+            tickformat: ',.0f'
+        };
+        if (isRent) {
+            priceYaxis.title = { text: '€/month', standoff: 10 };
+        }
         Plotly.newPlot('price-chart', [priceTrace], {
             paper_bgcolor: 'transparent',
             plot_bgcolor: 'transparent',
             font: { color: '#a1a1aa' },
             margin: { t: 20, r: 20, b: 40, l: 70 },
-            xaxis: { 
+            xaxis: {
                 gridcolor: '#27272a',
                 linecolor: '#27272a'
             },
-            yaxis: { 
-                gridcolor: '#27272a',
-                linecolor: '#27272a',
-                tickformat: '€,.0f',
-                title: isRent ? { text: '€/month', standoff: 10 } : undefined
-            }
+            yaxis: priceYaxis
         }, { responsive: true });
-    } else {
+    } else if (typeof Plotly !== 'undefined') {
         document.getElementById('price-chart').innerHTML = '<div class="text-zinc-500 text-center py-12">No data yet. Run the scraper to collect data.</div>';
     }
 
-    // Price per sqm by district chart
-    if (pricePerSqmByDistrict.length > 0) {
+    // Price per sqm by district — all districts (API returns one row per location); was capped at 10 in UI only
+    if (typeof Plotly !== 'undefined' && Array.isArray(pricePerSqmByDistrict) && pricePerSqmByDistrict.length > 0) {
+        const colors = ['#f43f5e', '#fbbf24', '#2dd4bf', '#a78bfa', '#60a5fa', '#ec4899', '#84cc16', '#06b6d4', '#f97316', '#8b5cf6'];
+        // Server order: highest avg €/m² first. Reverse so highest bar sits at top for horizontal layout.
+        const districtData = [...pricePerSqmByDistrict].reverse();
         const districtTrace = {
-            x: pricePerSqmByDistrict.slice(0, 10).map(d => d.location),
-            y: pricePerSqmByDistrict.slice(0, 10).map(d => d.avg_price_per_sqm),
             type: 'bar',
+            orientation: 'h',
+            x: districtData.map(d =>
+                Math.round(Number(d.avg_price_per_sqm || 0) * 100) / 100
+            ),
+            y: districtData.map(d => d.location),
             marker: {
-                color: pricePerSqmByDistrict.slice(0, 10).map((_, i) => {
-                    const colors = ['#f43f5e', '#fbbf24', '#2dd4bf', '#a78bfa', '#60a5fa', '#ec4899', '#84cc16', '#06b6d4', '#f97316', '#8b5cf6'];
-                    return colors[i % colors.length];
-                })
-            }
+                color: districtData.map((_, i) => colors[i % colors.length])
+            },
+            hovertemplate:
+                '%{y}<br>€%{x:.2f}' + (isRent ? '/m²/mo' : '/m²') + '<extra></extra>'
         };
+
+        const districtEl = document.getElementById('price-sqm-district-chart');
+        const n = districtData.length;
+        districtEl.style.height = Math.min(Math.max(380, n * 22 + 100), 3200) + 'px';
 
         Plotly.newPlot('price-sqm-district-chart', [districtTrace], {
             paper_bgcolor: 'transparent',
             plot_bgcolor: 'transparent',
             font: { color: '#a1a1aa', size: 10 },
-            margin: { t: 20, r: 20, b: 120, l: 60 },
-            xaxis: { 
+            margin: { t: 24, r: 24, b: 48, l: 24 },
+            xaxis: {
                 gridcolor: '#27272a',
                 linecolor: '#27272a',
-                tickangle: -45
+                tickprefix: '€',
+                tickformat: '.2f',
+                title: { text: isRent ? 'Avg €/m² per month' : 'Avg €/m²', standoff: 12 }
             },
-            yaxis: { 
+            yaxis: {
                 gridcolor: '#27272a',
                 linecolor: '#27272a',
-                tickformat: '€,.0f',
-                title: { text: isRent ? '€/m²/mo' : '€/m²', standoff: 10 }
+                automargin: true,
+                tickfont: { size: 10 }
             }
         }, { responsive: true });
-    } else {
+    } else if (typeof Plotly !== 'undefined') {
         document.getElementById('price-sqm-district-chart').innerHTML = '<div class="text-zinc-500 text-center py-12">No data yet.</div>';
+    }
+
+    // Listings per district (latest snapshot location)
+    if (typeof Plotly !== 'undefined' && Array.isArray(listingCountByDistrict) && listingCountByDistrict.length > 0) {
+        const countColors = ['#2dd4bf', '#60a5fa', '#a78bfa', '#fbbf24', '#f43f5e', '#84cc16', '#06b6d4', '#ec4899'];
+        const countData = [...listingCountByDistrict].reverse();
+        const countTrace = {
+            type: 'bar',
+            orientation: 'h',
+            x: countData.map(d => d.listing_count),
+            y: countData.map(d => d.location),
+            marker: {
+                color: countData.map((_, i) => countColors[i % countColors.length])
+            },
+            hovertemplate: '%{y}<br>%{x} listings<extra></extra>'
+        };
+        const countEl = document.getElementById('listings-count-district-chart');
+        const nc = countData.length;
+        countEl.style.height = Math.min(Math.max(380, nc * 22 + 100), 3200) + 'px';
+        Plotly.newPlot('listings-count-district-chart', [countTrace], {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#a1a1aa', size: 10 },
+            margin: { t: 24, r: 24, b: 48, l: 24 },
+            xaxis: {
+                gridcolor: '#27272a',
+                linecolor: '#27272a',
+                tickformat: ',.0f',
+                title: { text: 'Number of listings', standoff: 12 }
+            },
+            yaxis: {
+                gridcolor: '#27272a',
+                linecolor: '#27272a',
+                automargin: true,
+                tickfont: { size: 10 }
+            }
+        }, { responsive: true });
+    } else if (typeof Plotly !== 'undefined') {
+        document.getElementById('listings-count-district-chart').innerHTML =
+            '<div class="text-zinc-500 text-center py-12">No data yet.</div>';
     }
 </script>
 {% endblock %}

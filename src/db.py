@@ -316,7 +316,7 @@ def get_price_per_sqm_by_district(conn: sqlite3.Connection, market: str = MARKET
         """
         SELECT 
             s.location,
-            AVG(s.price_per_sqm) as avg_price_per_sqm,
+            ROUND(AVG(s.price_per_sqm), 2) as avg_price_per_sqm,
             COUNT(*) as count
         FROM snapshots s
         JOIN listings l ON s.listing_id = l.id AND l.market = ?
@@ -327,7 +327,30 @@ def get_price_per_sqm_by_district(conn: sqlite3.Connection, market: str = MARKET
         ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
         WHERE s.price_per_sqm IS NOT NULL
         GROUP BY s.location
-        ORDER BY avg_price_per_sqm DESC
+        ORDER BY AVG(s.price_per_sqm) DESC
+        """,
+        (market,),
+    )
+    return [dict(row) for row in cursor.fetchall()]
+
+
+def get_listing_count_by_district(conn: sqlite3.Connection, market: str = MARKET_SALE) -> List[dict]:
+    """Count listings per district using each listing's latest snapshot location."""
+    cursor = conn.execute(
+        """
+        SELECT 
+            s.location,
+            COUNT(*) as listing_count
+        FROM snapshots s
+        JOIN listings l ON s.listing_id = l.id AND l.market = ?
+        JOIN (
+            SELECT listing_id, MAX(scraped_at) as max_scraped
+            FROM snapshots
+            GROUP BY listing_id
+        ) latest ON s.listing_id = latest.listing_id AND s.scraped_at = latest.max_scraped
+        WHERE s.location IS NOT NULL AND TRIM(s.location) != ''
+        GROUP BY s.location
+        ORDER BY COUNT(*) DESC
         """,
         (market,),
     )
