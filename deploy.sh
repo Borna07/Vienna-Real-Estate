@@ -3,7 +3,7 @@ set -e
 
 PROJECT="/home/dev/vienna/Vienna-Real-Estate"
 BRANCH="main"
-SESSION="vienna"
+SERVICE="vienna-real-estate"
 
 cd "$PROJECT"
 
@@ -16,11 +16,9 @@ if [ "$LOCAL" = "$REMOTE" ]; then
   echo "$(date): No changes."
 
   # If app is not running, start it anyway
-  if ! pgrep -f "uvicorn src.app:app --host 0.0.0.0 --port 8080" >/dev/null; then
+  if ! systemctl is-active --quiet "$SERVICE"; then
     echo "$(date): App not running. Starting..."
-    tmux send-keys -t "$SESSION" "cd $PROJECT" C-m
-    tmux send-keys -t "$SESSION" "source venv/bin/activate" C-m
-    tmux send-keys -t "$SESSION" "uvicorn src.app:app --host 0.0.0.0 --port 8080" C-m
+    sudo -n systemctl start "$SERVICE"
   fi
 
   exit 0
@@ -33,12 +31,7 @@ echo "$(date): Changes detected. Updating..."
 git reset --hard "origin/$BRANCH"
 git clean -fd
 
-# Restart app inside tmux
-# Sends commands to the tmux session: stop current process, start again
-tmux send-keys -t "$SESSION" C-c
-sleep 1
-tmux send-keys -t "$SESSION" "cd $PROJECT" C-m
-tmux send-keys -t "$SESSION" "source venv/bin/activate" C-m
-tmux send-keys -t "$SESSION" "uvicorn src.app:app --host 0.0.0.0 --port 8080" C-m
+# Restart the systemd service (see deploy/vienna-real-estate.service)
+sudo -n systemctl restart "$SERVICE"
 
 echo "$(date): Updated and restarted."

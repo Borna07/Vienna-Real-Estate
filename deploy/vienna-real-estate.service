@@ -1,0 +1,19 @@
+# systemd unit for the Vienna Apartment Price Tracker dashboard.
+# Install: sudo cp to /etc/systemd/system/vienna-real-estate.service,
+# then `sudo systemctl daemon-reload && sudo systemctl enable --now vienna-real-estate`.
+
+[Unit]
+Description=Vienna Apartment Price Tracker (uvicorn)
+After=network.target
+
+[Service]
+Type=simple
+User=dev
+Group=dev
+WorkingDirectory=/home/dev/vienna/Vienna-Real-Estate
+ExecStart=/home/dev/vienna/Vienna-Real-Estate/venv/bin/uvicorn src.app:app --host 127.0.0.1 --port 8080 --proxy-headers
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
